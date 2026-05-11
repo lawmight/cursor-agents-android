@@ -15,6 +15,14 @@
     <string name="onboarding_validating">Validating key…</string>
     <string name="onboarding_show_key">Show key</string>
     <string name="onboarding_hide_key">Hide key</string>
+    <string name="onboarding_connected_title">Connected</string>
+    <string name="onboarding_account_label">Account</string>
+    <string name="onboarding_key_label">Key</string>
+    <string name="onboarding_use_different_key">Use a different key</string>
+    <string name="onboarding_error_unauthorized">That key didn\'t work. Double-check you copied it from cursor.com/dashboard.</string>
+    <string name="onboarding_error_forbidden">Key is valid but doesn\'t have permission for /v0/me. Try a personal API key.</string>
+    <string name="onboarding_error_cursor_unavailable">Something went wrong on Cursor\'s end. Try again in a moment.</string>
+    <string name="onboarding_error_network">Can\'t reach cursor.com. Check your connection.</string>
 
     <!-- Agent list -->
     <string name="agents_title">Agents</string>
