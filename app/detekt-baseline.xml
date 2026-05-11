@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>FunctionNaming:AgentDetailScreen.kt$@Composable fun AgentDetailScreen(agentId: String, onClose: () -&gt; Unit)</ID>
+    <ID>FunctionNaming:AgentListScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun AgentListScreen( onLaunch: () -&gt; Unit, onSettings: () -&gt; Unit, onOpen: (String) -&gt; Unit, )</ID>
+    <ID>FunctionNaming:AppNavHost.kt$@Composable fun AppNavHost(navController: NavHostController)</ID>
+    <ID>FunctionNaming:LaunchAgentScreen.kt$@Composable fun LaunchAgentScreen(onLaunched: () -&gt; Unit)</ID>
+    <ID>FunctionNaming:OnboardingScreen.kt$@Composable fun OnboardingScreen(onValidated: () -&gt; Unit)</ID>
+    <ID>FunctionNaming:SettingsScreen.kt$@Composable fun SettingsScreen(onBack: () -&gt; Unit)</ID>
+    <ID>FunctionNaming:StatusBadge.kt$@Composable fun StatusBadge(status: AgentStatus, modifier: Modifier = Modifier)</ID>
+    <ID>FunctionNaming:Theme.kt$@Composable fun CursorAgentsTheme( darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -&gt; Unit, )</ID>
+    <ID>FunctionOnlyReturningConstant:AppNavHost.kt$Routes$fun detail(id: String)</ID>
+    <ID>MagicNumber:Color.kt$0xFF050507</ID>
+    <ID>MagicNumber:Color.kt$0xFF0B5CAD</ID>
+    <ID>MagicNumber:Color.kt$0xFF0D0E12</ID>
+    <ID>MagicNumber:Color.kt$0xFF0F6B35</ID>
+    <ID>MagicNumber:Color.kt$0xFF102A43</ID>
+    <ID>MagicNumber:Color.kt$0xFF10351F</ID>
+    <ID>MagicNumber:Color.kt$0xFF11131A</ID>
+    <ID>MagicNumber:Color.kt$0xFF16803C</ID>
+    <ID>MagicNumber:Color.kt$0xFF1F2430</ID>
+    <ID>MagicNumber:Color.kt$0xFF2A2F3A</ID>
+    <ID>MagicNumber:Color.kt$0xFF30376F</ID>
+    <ID>MagicNumber:Color.kt$0xFF383E49</ID>
+    <ID>MagicNumber:Color.kt$0xFF3D2E0A</ID>
+    <ID>MagicNumber:Color.kt$0xFF3D4594</ID>
+    <ID>MagicNumber:Color.kt$0xFF3F1516</ID>
+    <ID>MagicNumber:Color.kt$0xFF44C285</ID>
+    <ID>MagicNumber:Color.kt$0xFF4C56B8</ID>
+    <ID>MagicNumber:Color.kt$0xFF545B68</ID>
+    <ID>MagicNumber:Color.kt$0xFF5E6AD2</ID>
+    <ID>MagicNumber:Color.kt$0xFF6F7785</ID>
+    <ID>MagicNumber:Color.kt$0xFF6F7AE3</ID>
+    <ID>MagicNumber:Color.kt$0xFF7A4B00</ID>
+    <ID>MagicNumber:Color.kt$0xFF8791F2</ID>
+    <ID>MagicNumber:Color.kt$0xFF8E95A3</ID>
+    <ID>MagicNumber:Color.kt$0xFFA15C00</ID>
+    <ID>MagicNumber:Color.kt$0xFFA7F3C4</ID>
+    <ID>MagicNumber:Color.kt$0xFFA8B0FF</ID>
+    <ID>MagicNumber:Color.kt$0xFFA8D4FF</ID>
+    <ID>MagicNumber:Color.kt$0xFFAEB4C0</ID>
+    <ID>MagicNumber:Color.kt$0xFFB42318</ID>
+    <ID>MagicNumber:Color.kt$0xFFC7CCFF</ID>
+    <ID>MagicNumber:Color.kt$0xFFCDD0D8</ID>
+    <ID>MagicNumber:Color.kt$0xFFD92D20</ID>
+    <ID>MagicNumber:Color.kt$0xFFDDEEFF</ID>
+    <ID>MagicNumber:Color.kt$0xFFDFF7E9</ID>
+    <ID>MagicNumber:Color.kt$0xFFE0B341</ID>
+    <ID>MagicNumber:Color.kt$0xFFE1E4FF</ID>
+    <ID>MagicNumber:Color.kt$0xFFE4E6EA</ID>
+    <ID>MagicNumber:Color.kt$0xFFF1F2FF</ID>
+    <ID>MagicNumber:Color.kt$0xFFF2F3F5</ID>
+    <ID>MagicNumber:Color.kt$0xFFFAFAFB</ID>
+    <ID>MagicNumber:Color.kt$0xFFFF6B66</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFB4AD</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFE3A3</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFE3E0</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFF2CC</ID>
+    <ID>MagicNumber:Color.kt$0xFFFFFFFF</ID>
+    <ID>MagicNumber:CursorApiClient.kt$CursorApiClient$400</ID>
+    <ID>MagicNumber:Motion.kt$MotionEasing$0.2f</ID>
+    <ID>MagicNumber:Type.kt$0.25</ID>
+    <ID>MatchingDeclarationName:AppNavHost.kt$Routes</ID>
+    <ID>MaxLineLength:LaunchAgentScreen.kt$OutlinedTextField(value = branch, onValueChange = { branch = it }, label = { Text(stringResource(R.string.launch_branch)) }, modifier = Modifier.fillMaxWidth())</ID>
+    <ID>MaxLineLength:LaunchAgentScreen.kt$OutlinedTextField(value = prompt, onValueChange = { prompt = it }, label = { Text(stringResource(R.string.launch_prompt)) }, modifier = Modifier.fillMaxWidth(), minLines = 4)</ID>
+    <ID>MaxLineLength:LaunchAgentScreen.kt$OutlinedTextField(value = repo, onValueChange = { repo = it }, label = { Text(stringResource(R.string.launch_repo)) }, modifier = Modifier.fillMaxWidth())</ID>
+    <ID>TooManyFunctions:CursorApiClient.kt$CursorApiClient</ID>
+    <ID>UnusedParameter:AgentDetailScreen.kt$agentId: String</ID>
+    <ID>UnusedParameter:AgentListScreen.kt$onOpen: (String) -&gt; Unit</ID>
+    <ID>UnusedParameter:AppNavHost.kt$Routes$id: String</ID>
+    <ID>UnusedPrivateProperty:EncryptedKeyStore.kt$EncryptedKeyStore$val a = alias ?: prefs.getString("active_alias", DEFAULT_ALIAS) ?: DEFAULT_ALIAS</ID>
+  </CurrentIssues>
+</SmellBaseline>
