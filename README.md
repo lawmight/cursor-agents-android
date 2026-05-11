@@ -11,7 +11,7 @@ The first native Android client for Cursor's Cloud Agents.
 
 ![Cursor Agents Android hero](docs/screenshots/hero.png)
 
-## What is this?
+## What is this
 
 Cursor Agents Android is a phone-first control surface for Cursor cloud agents.
 Paste your Cursor API key, validate it on device, and launch agents against your repositories from anywhere.
@@ -99,7 +99,6 @@ See the [Linear project](https://linear.app/cursor-android-app/project/cursor-ag
 
 - [FCM push when agents finish](https://linear.app/cursor-android-app/issue/CUR-23)
 - [Home-screen widget](https://linear.app/cursor-android-app/issue/CUR-24)
-- [F-Droid listing](https://linear.app/cursor-android-app/issue/CUR-25)
 - [Tablet / foldable layouts](https://linear.app/cursor-android-app/issue/CUR-27)
 - [Tasker integration](https://linear.app/cursor-android-app/issue/CUR-28)
 
