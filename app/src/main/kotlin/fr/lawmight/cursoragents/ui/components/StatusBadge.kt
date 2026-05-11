@@ -12,6 +12,7 @@ import fr.lawmight.cursoragents.data.api.AgentStatus
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 import fr.lawmight.cursoragents.ui.theme.LocalStatusColors
 
+@Suppress("FunctionName", "FunctionNaming")
 @Composable
 fun StatusBadge(
     status: AgentStatus,
