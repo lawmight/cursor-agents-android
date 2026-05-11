@@ -13,16 +13,20 @@ import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 import fr.lawmight.cursoragents.ui.theme.LocalStatusColors
 
 @Composable
-fun StatusBadge(status: AgentStatus, modifier: Modifier = Modifier) {
+fun StatusBadge(
+    status: AgentStatus,
+    modifier: Modifier = Modifier,
+) {
     val colors = LocalStatusColors.current.forStatus(status)
     val spacing = LocalSpacing.current
     Text(
         text = status.name,
         style = MaterialTheme.typography.labelSmall,
         color = colors.foreground,
-        modifier = modifier
-            .clip(CircleShape)
-            .background(colors.background)
-            .padding(horizontal = spacing.xs, vertical = spacing.xxs),
+        modifier =
+            modifier
+                .clip(CircleShape)
+                .background(colors.background)
+                .padding(horizontal = spacing.xs, vertical = spacing.xxs),
     )
 }

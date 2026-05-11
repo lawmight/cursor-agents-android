@@ -69,41 +69,43 @@ val CursorDarkOnSuccess = CursorGray950
 val CursorDarkWarning = Color(0xFFE0B341)
 val CursorDarkOnWarning = CursorGray950
 
-val CursorLightColorScheme: ColorScheme = lightColorScheme(
-    primary = CursorLightPrimary,
-    onPrimary = CursorLightOnPrimary,
-    primaryContainer = CursorLightPrimaryContainer,
-    onPrimaryContainer = CursorLightOnPrimaryContainer,
-    background = CursorLightSurface,
-    onBackground = CursorLightOnSurface,
-    surface = CursorLightSurface,
-    onSurface = CursorLightOnSurface,
-    surfaceVariant = CursorLightSurfaceVariant,
-    onSurfaceVariant = CursorLightOnSurfaceVariant,
-    surfaceContainer = CursorLightSurfaceContainer,
-    outline = CursorLightOutline,
-    outlineVariant = CursorLightOutlineVariant,
-    error = CursorLightError,
-    onError = CursorLightOnError,
-)
+val CursorLightColorScheme: ColorScheme =
+    lightColorScheme(
+        primary = CursorLightPrimary,
+        onPrimary = CursorLightOnPrimary,
+        primaryContainer = CursorLightPrimaryContainer,
+        onPrimaryContainer = CursorLightOnPrimaryContainer,
+        background = CursorLightSurface,
+        onBackground = CursorLightOnSurface,
+        surface = CursorLightSurface,
+        onSurface = CursorLightOnSurface,
+        surfaceVariant = CursorLightSurfaceVariant,
+        onSurfaceVariant = CursorLightOnSurfaceVariant,
+        surfaceContainer = CursorLightSurfaceContainer,
+        outline = CursorLightOutline,
+        outlineVariant = CursorLightOutlineVariant,
+        error = CursorLightError,
+        onError = CursorLightOnError,
+    )
 
-val CursorDarkColorScheme: ColorScheme = darkColorScheme(
-    primary = CursorDarkPrimary,
-    onPrimary = CursorDarkOnPrimary,
-    primaryContainer = CursorDarkPrimaryContainer,
-    onPrimaryContainer = CursorDarkOnPrimaryContainer,
-    background = CursorDarkSurface,
-    onBackground = CursorDarkOnSurface,
-    surface = CursorDarkSurface,
-    onSurface = CursorDarkOnSurface,
-    surfaceVariant = CursorDarkSurfaceVariant,
-    onSurfaceVariant = CursorDarkOnSurfaceVariant,
-    surfaceContainer = CursorDarkSurfaceContainer,
-    outline = CursorDarkOutline,
-    outlineVariant = CursorDarkOutlineVariant,
-    error = CursorDarkError,
-    onError = CursorDarkOnError,
-)
+val CursorDarkColorScheme: ColorScheme =
+    darkColorScheme(
+        primary = CursorDarkPrimary,
+        onPrimary = CursorDarkOnPrimary,
+        primaryContainer = CursorDarkPrimaryContainer,
+        onPrimaryContainer = CursorDarkOnPrimaryContainer,
+        background = CursorDarkSurface,
+        onBackground = CursorDarkOnSurface,
+        surface = CursorDarkSurface,
+        onSurface = CursorDarkOnSurface,
+        surfaceVariant = CursorDarkSurfaceVariant,
+        onSurfaceVariant = CursorDarkOnSurfaceVariant,
+        surfaceContainer = CursorDarkSurfaceContainer,
+        outline = CursorDarkOutline,
+        outlineVariant = CursorDarkOutlineVariant,
+        error = CursorDarkError,
+        onError = CursorDarkOnError,
+    )
 
 data class StatusColor(
     val foreground: Color,
@@ -128,39 +130,42 @@ data class StatusColors(
     val stopped: Color = stoppedBackground
     val failed: Color = failedBackground
 
-    fun forStatus(status: AgentStatus): StatusColor = when (status) {
-        AgentStatus.CREATING -> StatusColor(creatingForeground, creatingBackground)
-        AgentStatus.RUNNING -> StatusColor(runningForeground, runningBackground)
-        AgentStatus.FINISHED -> StatusColor(finishedForeground, finishedBackground)
-        AgentStatus.STOPPED -> StatusColor(stoppedForeground, stoppedBackground)
-        AgentStatus.FAILED -> StatusColor(failedForeground, failedBackground)
-    }
+    fun forStatus(status: AgentStatus): StatusColor =
+        when (status) {
+            AgentStatus.CREATING -> StatusColor(creatingForeground, creatingBackground)
+            AgentStatus.RUNNING -> StatusColor(runningForeground, runningBackground)
+            AgentStatus.FINISHED -> StatusColor(finishedForeground, finishedBackground)
+            AgentStatus.STOPPED -> StatusColor(stoppedForeground, stoppedBackground)
+            AgentStatus.FAILED -> StatusColor(failedForeground, failedBackground)
+        }
 }
 
-val LightStatusColors = StatusColors(
-    creatingForeground = Color(0xFF7A4B00),
-    creatingBackground = Color(0xFFFFF2CC),
-    runningForeground = Color(0xFF0B5CAD),
-    runningBackground = Color(0xFFDDEEFF),
-    finishedForeground = Color(0xFF0F6B35),
-    finishedBackground = Color(0xFFDFF7E9),
-    stoppedForeground = CursorGray700,
-    stoppedBackground = CursorGray200,
-    failedForeground = Color(0xFFB42318),
-    failedBackground = Color(0xFFFFE3E0),
-)
+val LightStatusColors =
+    StatusColors(
+        creatingForeground = Color(0xFF7A4B00),
+        creatingBackground = Color(0xFFFFF2CC),
+        runningForeground = Color(0xFF0B5CAD),
+        runningBackground = Color(0xFFDDEEFF),
+        finishedForeground = Color(0xFF0F6B35),
+        finishedBackground = Color(0xFFDFF7E9),
+        stoppedForeground = CursorGray700,
+        stoppedBackground = CursorGray200,
+        failedForeground = Color(0xFFB42318),
+        failedBackground = Color(0xFFFFE3E0),
+    )
 
-val DarkStatusColors = StatusColors(
-    creatingForeground = Color(0xFFFFE3A3),
-    creatingBackground = Color(0xFF3D2E0A),
-    runningForeground = Color(0xFFA8D4FF),
-    runningBackground = Color(0xFF102A43),
-    finishedForeground = Color(0xFFA7F3C4),
-    finishedBackground = Color(0xFF10351F),
-    stoppedForeground = CursorGray300,
-    stoppedBackground = Color(0xFF2A2F3A),
-    failedForeground = Color(0xFFFFB4AD),
-    failedBackground = Color(0xFF3F1516),
-)
+val DarkStatusColors =
+    StatusColors(
+        creatingForeground = Color(0xFFFFE3A3),
+        creatingBackground = Color(0xFF3D2E0A),
+        runningForeground = Color(0xFFA8D4FF),
+        runningBackground = Color(0xFF102A43),
+        finishedForeground = Color(0xFFA7F3C4),
+        finishedBackground = Color(0xFF10351F),
+        stoppedForeground = CursorGray300,
+        stoppedBackground = Color(0xFF2A2F3A),
+        failedForeground = Color(0xFFFFB4AD),
+        failedBackground = Color(0xFF3F1516),
+    )
 
 val LocalStatusColors = staticCompositionLocalOf { DarkStatusColors }
