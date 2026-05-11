@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cursor Agents</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Connect Cursor</string>
+    <string name="onboarding_paste_key">Paste your Cursor API key</string>
+    <string name="onboarding_validate">Validate</string>
+    <string name="onboarding_get_key">Get an API key</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_invalid_key">Invalid key. Double-check and try again.</string>
+
+    <!-- Agent list -->
+    <string name="agents_title">Agents</string>
+    <string name="agents_empty">No agents yet. Launch one from the + button.</string>
+    <string name="agents_new">New agent</string>
+
+    <!-- Launch -->
+    <string name="launch_title">Launch agent</string>
+    <string name="launch_repo">Repository</string>
+    <string name="launch_branch">Branch</string>
+    <string name="launch_prompt">What should the agent do?</string>
+    <string name="launch_auto_create_pr">Auto create PR</string>
+    <string name="launch_submit">Launch</string>
+    <string name="launch_attach_image">Attach image</string>
+    <string name="launch_voice">Voice input</string>
+
+    <!-- Detail -->
+    <string name="detail_followup_hint">Send a follow-up…</string>
+    <string name="detail_stop">Stop</string>
+    <string name="detail_delete">Delete</string>
+    <string name="detail_open_pr">Open PR</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_api_keys">API keys</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_default_model">Default model</string>
+    <string name="settings_about">About</string>
+</resources>
