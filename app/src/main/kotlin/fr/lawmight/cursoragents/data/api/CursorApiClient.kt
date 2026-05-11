@@ -2,6 +2,7 @@ package fr.lawmight.cursoragents.data.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -24,10 +25,11 @@ import kotlinx.serialization.json.Json
 class CursorApiClient(
     private val apiKey: String,
     private val baseUrl: String = "https://api.cursor.com",
+    engineFactory: HttpClientEngineFactory<*> = CIO,
 ) {
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = false }
 
-    private val client: HttpClient = HttpClient(CIO) {
+    private val client: HttpClient = HttpClient(engineFactory) {
         install(ContentNegotiation) { json(json) }
         install(Logging)
         defaultRequest {

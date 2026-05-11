@@ -4,11 +4,24 @@
 
     <!-- Onboarding -->
     <string name="onboarding_title">Connect Cursor</string>
-    <string name="onboarding_paste_key">Paste your Cursor API key</string>
+    <string name="onboarding_subhead">Paste your Cursor API key to get started.</string>
+    <string name="onboarding_paste_key">Cursor API key</string>
     <string name="onboarding_validate">Validate</string>
-    <string name="onboarding_get_key">Get an API key</string>
+    <string name="onboarding_get_key_prompt">Don\'t have one yet?</string>
+    <string name="onboarding_get_key">Get a key</string>
     <string name="onboarding_continue">Continue</string>
-    <string name="onboarding_invalid_key">Invalid key. Double-check and try again.</string>
+    <string name="onboarding_connected_title">Connected</string>
+    <string name="onboarding_account_label">Account</string>
+    <string name="onboarding_key_label">Key</string>
+    <string name="onboarding_use_different_key">Use a different key</string>
+    <string name="onboarding_show_key">Show API key</string>
+    <string name="onboarding_hide_key">Hide API key</string>
+    <string name="onboarding_connected_icon">Connected</string>
+    <string name="onboarding_loading">Validating API key</string>
+    <string name="onboarding_error_unauthorized">That key didn\'t work. Double-check you copied it from cursor.com/dashboard.</string>
+    <string name="onboarding_error_forbidden">Key is valid but doesn\'t have permission for /v0/me. Try a personal API key.</string>
+    <string name="onboarding_error_cursor_unavailable">Something went wrong on Cursor\'s end. Try again in a moment.</string>
+    <string name="onboarding_error_network">Can\'t reach cursor.com. Check your connection.</string>
 
     <!-- Agent list -->
     <string name="agents_title">Agents</string>
