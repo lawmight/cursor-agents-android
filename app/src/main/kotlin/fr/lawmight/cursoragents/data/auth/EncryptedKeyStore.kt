@@ -25,13 +25,13 @@ class EncryptedKeyStore @Inject constructor(
     )
 
     fun save(key: String, alias: String = DEFAULT_ALIAS) {
-        prefs.edit().putString("key:\$alias", key).apply()
+        prefs.edit().putString("key:$alias", key).apply()
         prefs.edit().putString("active_alias", alias).apply()
     }
 
     fun read(alias: String? = null): String? {
         val a = alias ?: prefs.getString("active_alias", DEFAULT_ALIAS) ?: DEFAULT_ALIAS
-        return prefs.getString("key:\$a", null)
+        return prefs.getString("key:$a", null)
     }
 
     fun aliases(): List<String> =
@@ -44,7 +44,7 @@ class EncryptedKeyStore @Inject constructor(
     }
 
     fun remove(alias: String) {
-        prefs.edit().remove("key:\$alias").apply()
+        prefs.edit().remove("key:$alias").apply()
         if (activeAlias() == alias) {
             prefs.edit().remove("active_alias").apply()
         }

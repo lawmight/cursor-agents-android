@@ -103,86 +103,145 @@ private fun KeyEntryContent(
         verticalArrangement = Arrangement.spacedBy(spacing.m, Alignment.CenterVertically),
         horizontalAlignment = Alignment.Start,
     ) {
-        Text(
-            text = stringResource(R.string.onboarding_title),
-            style = MaterialTheme.typography.headlineMedium,
-        )
-        Text(
-            text = stringResource(R.string.onboarding_subhead),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        OutlinedTextField(
+        OnboardingHeader()
+        ApiKeyTextField(
             value = keyDraft,
             onValueChange = onKeyChanged,
-            label = { Text(stringResource(R.string.onboarding_paste_key)) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            enabled = !isValidating,
-            isError = errorMessage != null,
-            visualTransformation = if (isKeyVisible) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
-            trailingIcon = {
-                val icon = if (isKeyVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
-                val contentDescription = if (isKeyVisible) {
-                    stringResource(R.string.onboarding_hide_key)
-                } else {
-                    stringResource(R.string.onboarding_show_key)
-                }
-                IconButton(onClick = { isKeyVisible = !isKeyVisible }) {
-                    Icon(imageVector = icon, contentDescription = contentDescription)
-                }
-            },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
-                keyboardType = KeyboardType.Password,
-            ),
-            supportingText = errorMessage?.let { message ->
-                {
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                }
+            errorMessage = errorMessage,
+            isEnabled = !isValidating,
+            isKeyVisible = isKeyVisible,
+            onVisibilityToggle = { isKeyVisible = !isKeyVisible },
+        )
+        ValidateKeyButton(
+            isEnabled = keyDraft.isNotBlank() && !isValidating,
+            isValidating = isValidating,
+            onClick = onValidate,
+        )
+        GetKeyLinkRow(
+            onClick = {
+                CustomTabsIntent.Builder()
+                    .build()
+                    .launchUrl(context, Uri.parse(CURSOR_KEY_URL))
             },
         )
-        Button(
-            onClick = onValidate,
-            enabled = keyDraft.isNotBlank() && !isValidating,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            if (isValidating) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(spacing.l),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    strokeWidth = spacing.xxs,
-                )
-            } else {
-                Text(stringResource(R.string.onboarding_validate))
-            }
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(R.string.onboarding_get_key_prompt),
-                style = MaterialTheme.typography.bodyMedium,
+    }
+}
+
+@Composable
+private fun OnboardingHeader() {
+    Text(
+        text = stringResource(R.string.onboarding_title),
+        style = MaterialTheme.typography.headlineMedium,
+    )
+    Text(
+        text = stringResource(R.string.onboarding_subhead),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.bodyLarge,
+    )
+}
+
+@Composable
+@Suppress("LongParameterList")
+private fun ApiKeyTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    errorMessage: String?,
+    isEnabled: Boolean,
+    isKeyVisible: Boolean,
+    onVisibilityToggle: () -> Unit,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(stringResource(R.string.onboarding_paste_key)) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        enabled = isEnabled,
+        isError = errorMessage != null,
+        visualTransformation = if (isKeyVisible) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
+        trailingIcon = {
+            ApiKeyVisibilityToggle(
+                isKeyVisible = isKeyVisible,
+                onClick = onVisibilityToggle,
             )
-            Spacer(Modifier.width(spacing.xs))
-            TextButton(
-                onClick = {
-                    CustomTabsIntent.Builder()
-                        .build()
-                        .launchUrl(context, Uri.parse(CURSOR_KEY_URL))
-                },
-            ) {
-                Text(stringResource(R.string.onboarding_get_key))
+        },
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.None,
+            keyboardType = KeyboardType.Password,
+        ),
+        supportingText = errorMessage?.let { message ->
+            {
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
+        },
+    )
+}
+
+@Composable
+private fun ApiKeyVisibilityToggle(
+    isKeyVisible: Boolean,
+    onClick: () -> Unit,
+) {
+    val icon = if (isKeyVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
+    val contentDescription = if (isKeyVisible) {
+        stringResource(R.string.onboarding_hide_key)
+    } else {
+        stringResource(R.string.onboarding_show_key)
+    }
+
+    IconButton(onClick = onClick) {
+        Icon(imageVector = icon, contentDescription = contentDescription)
+    }
+}
+
+@Composable
+private fun ValidateKeyButton(
+    isEnabled: Boolean,
+    isValidating: Boolean,
+    onClick: () -> Unit,
+) {
+    val spacing = LocalSpacing.current
+
+    Button(
+        onClick = onClick,
+        enabled = isEnabled,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        if (isValidating) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(spacing.l),
+                color = MaterialTheme.colorScheme.onPrimary,
+                strokeWidth = spacing.xxs,
+            )
+        } else {
+            Text(stringResource(R.string.onboarding_validate))
+        }
+    }
+}
+
+@Composable
+private fun GetKeyLinkRow(onClick: () -> Unit) {
+    val spacing = LocalSpacing.current
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(R.string.onboarding_get_key_prompt),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Spacer(Modifier.width(spacing.xs))
+        TextButton(onClick = onClick) {
+            Text(stringResource(R.string.onboarding_get_key))
         }
     }
 }

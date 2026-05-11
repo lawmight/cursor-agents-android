@@ -15,7 +15,6 @@ import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -59,7 +58,7 @@ class OnboardingViewModelTest {
             assertEquals(OnboardingState.Idle(), awaitItem())
 
             viewModel.event(OnboardingEvent.OnValidate("  cursor-key  "))
-            advanceUntilIdle()
+            testDispatcher.scheduler.advanceUntilIdle()
 
             assertEquals(OnboardingState.Validating("cursor-key"), awaitItem())
             assertEquals(OnboardingState.Validated(ME_RESPONSE), awaitItem())
@@ -100,7 +99,7 @@ class OnboardingViewModelTest {
             assertEquals(OnboardingState.Idle(), awaitItem())
 
             viewModel.event(OnboardingEvent.OnValidate("cursor-key"))
-            advanceUntilIdle()
+            testDispatcher.scheduler.advanceUntilIdle()
 
             assertEquals(OnboardingState.Validating("cursor-key"), awaitItem())
             assertEquals(
@@ -120,7 +119,7 @@ class OnboardingViewModelTest {
 
         viewModel.state.test {
             assertEquals(OnboardingState.Idle(), awaitItem())
-            advanceUntilIdle()
+            testDispatcher.scheduler.advanceUntilIdle()
 
             assertEquals(OnboardingState.Validating("saved-key"), awaitItem())
             assertEquals(OnboardingState.Validated(ME_RESPONSE), awaitItem())
@@ -138,7 +137,7 @@ class OnboardingViewModelTest {
             assertEquals(OnboardingState.Idle(), awaitItem())
 
             viewModel.event(OnboardingEvent.OnValidate("cursor-key"))
-            advanceUntilIdle()
+            testDispatcher.scheduler.advanceUntilIdle()
 
             assertEquals(OnboardingState.Validating("cursor-key"), awaitItem())
             assertEquals(
@@ -170,7 +169,7 @@ class OnboardingViewModelTest {
             CursorApiClient(
                 apiKey = key,
                 baseUrl = BASE_URL,
-                engineFactory = engine,
+                engine = engine,
             )
         }
         return OnboardingViewModel(

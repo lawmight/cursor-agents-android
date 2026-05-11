@@ -89,6 +89,7 @@ class OnboardingViewModel @Inject constructor(
         _state.value = OnboardingState.Idle()
     }
 
+    @Suppress("SwallowedException")
     private suspend fun validateKey(key: String): ValidationResult {
         val client = clientFactory.create(key.trim())
         return try {
