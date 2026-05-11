@@ -33,6 +33,7 @@ import fr.lawmight.cursoragents.ui.theme.StatusColors
 
 enum class StatusBadgeSize { Small, Medium }
 
+@Suppress("FunctionName", "FunctionNaming")
 @Composable
 fun StatusBadge(
     status: AgentStatus,
