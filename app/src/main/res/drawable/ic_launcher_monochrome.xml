@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Themed-icon monochrome layer (Android 13+). Same lowercase "c" mark. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M78.25,40
+                          A28,28 0 1 0 78.25,68
+                          L69.6,63
+                          A18,18 0 1 1 69.6,45
+                          Z" />
+</vector>

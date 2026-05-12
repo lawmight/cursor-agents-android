@@ -9,31 +9,94 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val DarkColors = darkColorScheme(
-    primary = Accent,
-    onPrimary = Color.White,
-    background = Bg,
-    onBackground = OnSurface,
-    surface = Surface,
-    onSurface = OnSurface,
-    surfaceVariant = SurfaceHover,
-    onSurfaceVariant = OnSurfaceMuted,
-    error = StatusFailed,
-)
+private val DarkColors =
+    darkColorScheme(
+        primary = Accent,
+        onPrimary = OnAccent,
+        primaryContainer = AccentPressed,
+        onPrimaryContainer = OnAccent,
+        secondary = AccentMuted,
+        onSecondary = OnAccent,
+        background = DarkBg,
+        onBackground = DarkOnSurface,
+        surface = DarkSurface,
+        onSurface = DarkOnSurface,
+        surfaceVariant = DarkSurfaceVariant,
+        onSurfaceVariant = DarkOnSurfaceMuted,
+        surfaceTint = Accent,
+        outline = DarkOutline,
+        outlineVariant = DarkOutlineVariant,
+        error = DarkError,
+        onError = Color.White,
+        inverseSurface = LightSurface,
+        inverseOnSurface = LightOnSurface,
+    )
 
-private val LightColors = lightColorScheme(
-    primary = Accent,
-)
+private val LightColors =
+    lightColorScheme(
+        primary = Accent,
+        onPrimary = OnAccent,
+        primaryContainer = AccentMuted,
+        onPrimaryContainer = LightOnSurface,
+        secondary = AccentPressed,
+        onSecondary = OnAccent,
+        background = LightBg,
+        onBackground = LightOnBackground,
+        surface = LightSurface,
+        onSurface = LightOnSurface,
+        surfaceVariant = LightSurfaceVariant,
+        onSurfaceVariant = LightOnSurfaceMuted,
+        surfaceTint = Accent,
+        outline = LightOutline,
+        outlineVariant = LightOutlineVariant,
+        error = LightError,
+        onError = Color.White,
+        inverseSurface = DarkSurface,
+        inverseOnSurface = DarkOnSurface,
+    )
 
 data class StatusColors(
-    val creating: Color = StatusCreating,
-    val running: Color = StatusRunning,
-    val finished: Color = StatusFinished,
-    val stopped: Color = StatusStopped,
-    val failed: Color = StatusFailed,
+    val creating: Color,
+    val onCreating: Color,
+    val running: Color,
+    val onRunning: Color,
+    val finished: Color,
+    val onFinished: Color,
+    val stopped: Color,
+    val onStopped: Color,
+    val failed: Color,
+    val onFailed: Color,
 )
 
-val LocalStatusColors = staticCompositionLocalOf { StatusColors() }
+internal val DarkStatusColors =
+    StatusColors(
+        creating = StatusCreating,
+        onCreating = StatusCreatingDarkOn,
+        running = StatusRunning,
+        onRunning = StatusRunningDarkOn,
+        finished = StatusFinished,
+        onFinished = StatusFinishedDarkOn,
+        stopped = StatusStopped,
+        onStopped = StatusStoppedDarkOn,
+        failed = StatusFailed,
+        onFailed = StatusFailedDarkOn,
+    )
+
+internal val LightStatusColors =
+    StatusColors(
+        creating = StatusCreating,
+        onCreating = StatusCreatingLightOn,
+        running = StatusRunning,
+        onRunning = StatusRunningLightOn,
+        finished = StatusFinished,
+        onFinished = StatusFinishedLightOn,
+        stopped = StatusStopped,
+        onStopped = StatusStoppedLightOn,
+        failed = StatusFailed,
+        onFailed = StatusFailedLightOn,
+    )
+
+val LocalStatusColors = staticCompositionLocalOf { DarkStatusColors }
 
 @Composable
 fun CursorAgentsTheme(
@@ -41,7 +104,16 @@ fun CursorAgentsTheme(
     content: @Composable () -> Unit,
 ) {
     val scheme = if (darkTheme) DarkColors else LightColors
-    CompositionLocalProvider(LocalStatusColors provides StatusColors()) {
-        MaterialTheme(colorScheme = scheme, typography = CursorTypography, shapes = CursorShapes, content = content)
+    val statusColors = if (darkTheme) DarkStatusColors else LightStatusColors
+    CompositionLocalProvider(
+        LocalSpacing provides Spacing(),
+        LocalStatusColors provides statusColors,
+    ) {
+        MaterialTheme(
+            colorScheme = scheme,
+            typography = CursorTypography,
+            shapes = CursorShapes,
+            content = content,
+        )
     }
 }

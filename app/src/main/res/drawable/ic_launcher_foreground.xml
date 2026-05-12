@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
-    <!-- Simple geometric mark placeholder until brand design is locked. -->
-    <path android:fillColor="#5E6AD2" android:pathData="M54,30 L78,54 L54,78 L30,54 Z" />
-    <path android:fillColor="#FFFFFF" android:pathData="M54,42 L66,54 L54,66 L42,54 Z" />
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!--
+        Adaptive icon foreground: stylised lowercase "c" mark in white, centered
+        in the 72dp safe zone. Drawn as a filled donut-sector (outer arc CCW to
+        inner arc CW) with a 60-degree gap on the right.
+        Outer R = 28, Inner r = 18 around center (54, 54).
+    -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M78.25,40
+                          A28,28 0 1 0 78.25,68
+                          L69.6,63
+                          A18,18 0 1 1 69.6,45
+                          Z" />
 </vector>

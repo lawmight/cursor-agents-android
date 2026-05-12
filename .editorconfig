@@ -12,6 +12,8 @@ trim_trailing_whitespace = true
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_allow_trailing_comma_on_call_site = true
 ktlint_standard_property-naming = disabled
+# Compose composables use PascalCase by convention.
+ktlint_function_naming_ignore_when_annotated_with = Composable, Preview
 
 [*.{yml,yaml,xml,gradle,gradle.kts,json,md}]
 indent_size = 2

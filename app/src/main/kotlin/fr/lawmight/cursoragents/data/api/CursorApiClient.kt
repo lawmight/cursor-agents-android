@@ -25,33 +25,42 @@ class CursorApiClient(
     private val apiKey: String,
     private val baseUrl: String = "https://api.cursor.com",
 ) {
-    private val json = Json { ignoreUnknownKeys = true; encodeDefaults = false }
-
-    private val client: HttpClient = HttpClient(CIO) {
-        install(ContentNegotiation) { json(json) }
-        install(Logging)
-        defaultRequest {
-            header(HttpHeaders.Authorization, "Bearer $apiKey")
-            contentType(ContentType.Application.Json)
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = false
         }
-        HttpResponseValidator {
-            validateResponse { response ->
-                when (response.status) {
-                    HttpStatusCode.Unauthorized -> throw CursorApiException.Unauthorized
-                    HttpStatusCode.Forbidden -> throw CursorApiException.Forbidden
-                    HttpStatusCode.NotFound -> throw CursorApiException.NotFound
-                    HttpStatusCode.TooManyRequests -> throw CursorApiException.RateLimited
-                    else -> if (response.status.value >= 400) {
-                        throw CursorApiException.Unexpected(response.status.value, response.bodyAsTextOrEmpty())
+
+    private val client: HttpClient =
+        HttpClient(CIO) {
+            install(ContentNegotiation) { json(json) }
+            install(Logging)
+            defaultRequest {
+                header(HttpHeaders.Authorization, "Bearer $apiKey")
+                contentType(ContentType.Application.Json)
+            }
+            HttpResponseValidator {
+                validateResponse { response ->
+                    when (response.status) {
+                        HttpStatusCode.Unauthorized -> throw CursorApiException.Unauthorized
+                        HttpStatusCode.Forbidden -> throw CursorApiException.Forbidden
+                        HttpStatusCode.NotFound -> throw CursorApiException.NotFound
+                        HttpStatusCode.TooManyRequests -> throw CursorApiException.RateLimited
+                        else ->
+                            if (response.status.value >= 400) {
+                                throw CursorApiException.Unexpected(response.status.value, response.bodyAsTextOrEmpty())
+                            }
                     }
                 }
             }
         }
-    }
 
     suspend fun me(): MeResponse = client.get("$baseUrl/v0/me").body()
 
-    suspend fun listAgents(limit: Int? = null, cursor: String? = null): AgentListResponse =
+    suspend fun listAgents(
+        limit: Int? = null,
+        cursor: String? = null,
+    ): AgentListResponse =
         client.get("$baseUrl/v0/agents") {
             limit?.let { url.parameters.append("limit", it.toString()) }
             cursor?.let { url.parameters.append("cursor", it) }
@@ -62,25 +71,22 @@ class CursorApiClient(
     suspend fun getConversation(id: String): AgentConversation =
         client.get("$baseUrl/v0/agents/$id/conversation").body()
 
-    suspend fun launchAgent(req: LaunchAgentRequest): Agent =
-        client.post("$baseUrl/v0/agents") { setBody(req) }.body()
+    suspend fun launchAgent(req: LaunchAgentRequest): Agent = client.post("$baseUrl/v0/agents") { setBody(req) }.body()
 
-    suspend fun followUp(id: String, req: FollowUpRequest): Map<String, String> =
-        client.post("$baseUrl/v0/agents/$id/followup") { setBody(req) }.body()
+    suspend fun followUp(
+        id: String,
+        req: FollowUpRequest,
+    ): Map<String, String> = client.post("$baseUrl/v0/agents/$id/followup") { setBody(req) }.body()
 
-    suspend fun stopAgent(id: String): Map<String, String> =
-        client.post("$baseUrl/v0/agents/$id/stop").body()
+    suspend fun stopAgent(id: String): Map<String, String> = client.post("$baseUrl/v0/agents/$id/stop").body()
 
-    suspend fun deleteAgent(id: String): Map<String, String> =
-        client.delete("$baseUrl/v0/agents/$id").body()
+    suspend fun deleteAgent(id: String): Map<String, String> = client.delete("$baseUrl/v0/agents/$id").body()
 
     suspend fun listModels(): ModelsResponse = client.get("$baseUrl/v0/models").body()
 
-    suspend fun listRepositories(): RepositoriesResponse =
-        client.get("$baseUrl/v0/repositories").body()
+    suspend fun listRepositories(): RepositoriesResponse = client.get("$baseUrl/v0/repositories").body()
 
     fun close() = client.close()
 }
 
-private suspend fun HttpResponse.bodyAsTextOrEmpty(): String =
-    runCatching { bodyAsText() }.getOrDefault("")
+private suspend fun HttpResponse.bodyAsTextOrEmpty(): String = runCatching { bodyAsText() }.getOrDefault("")

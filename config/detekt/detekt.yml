@@ -1,0 +1,82 @@
+# Detekt config tuned for a Jetpack Compose codebase.
+#
+# Compose-specific adjustments (vs. detekt defaults):
+# - FunctionNaming allows PascalCase for @Composable functions.
+# - MagicNumber is disabled in design-token files (Color.kt, Type.kt, Spacing.kt,
+#   Shape.kt, Theme.kt) since hex colors and sp/dp values are the spec, not noise.
+# - LongMethod / LongParameterList thresholds raised — Compose screens routinely
+#   nest large layout blocks and pass many slots, callbacks, and modifiers.
+# - TooManyFunctions / MatchingDeclarationName relaxed for screen files that
+#   colocate UiState + Content + Preview helpers.
+
+build:
+  maxIssues: 0
+
+complexity:
+  active: true
+  LongMethod:
+    active: true
+    threshold: 200
+  LongParameterList:
+    active: true
+    functionThreshold: 16
+    constructorThreshold: 16
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 25
+    thresholdInClasses: 20
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
+    thresholdInEnums: 15
+    ignoreDeprecated: true
+    ignorePrivate: true
+    ignoreOverridden: true
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 20
+    ignoreSimpleWhenEntries: true
+
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    excludeClassPattern: '$^'
+    ignoreAnnotated: ['Composable']
+  MatchingDeclarationName:
+    # Compose screen files frequently colocate UiState + Content + Preview
+    # composables alongside the public Screen entry point. Enforcing
+    # one-file-one-declaration here would force a five-file-per-screen split.
+    active: false
+
+style:
+  active: true
+  MagicNumber:
+    active: true
+    ignoreNumbers: ['-1', '0', '1', '2', '100', '1000']
+    ignoreHashCodeFunction: true
+    ignoreEnums: true
+    ignoreRanges: true
+    ignoreNamedArgument: true
+    ignoreLocalVariableDeclaration: true
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignorePropertyDeclaration: true
+    ignoreAnnotation: true
+    excludes: [
+      '**/ui/theme/**',
+      '**/ui/brand/**',
+      '**/ui/components/**',
+      '**/*Preview*.kt',
+      '**/*Screen.kt',
+    ]
+  ReturnCount:
+    active: true
+    max: 4
+  UnusedPrivateMember:
+    active: true
+    allowedNames: '(_|ignored|expected|preview.*|.*Preview.*)'
+  ForbiddenComment:
+    active: false # we keep TODOs in scaffold + plan-tracked code
