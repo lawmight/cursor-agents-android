@@ -16,7 +16,7 @@ object Routes {
     const val LAUNCH = "launch"
     const val DETAIL = "agent/{id}"
     const val SETTINGS = "settings"
-    fun detail(id: String) = "agent/\$id"
+    fun detail(id: String) = "agent/$id"
 }
 
 @Composable

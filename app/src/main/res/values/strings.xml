@@ -1,40 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Cursor Agents</string>
+    <string name="brand_tagline">Launch and review Cursor cloud agents on the go.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title">Connect Cursor</string>
-    <string name="onboarding_paste_key">Paste your Cursor API key</string>
-    <string name="onboarding_validate">Validate</string>
+    <string name="onboarding_subtitle">Paste your Cursor API key to launch agents from your phone.</string>
+    <string name="onboarding_paste_key">Cursor API key</string>
+    <string name="onboarding_paste_key_hint">key_…</string>
+    <string name="onboarding_validate">Validate &amp; continue</string>
     <string name="onboarding_get_key">Get an API key</string>
     <string name="onboarding_continue">Continue</string>
-    <string name="onboarding_invalid_key">Invalid key. Double-check and try again.</string>
+    <string name="onboarding_invalid_key">That key was rejected. Double-check it and try again.</string>
+    <string name="onboarding_validating">Validating key…</string>
+    <string name="onboarding_show_key">Show key</string>
+    <string name="onboarding_hide_key">Hide key</string>
 
     <!-- Agent list -->
     <string name="agents_title">Agents</string>
-    <string name="agents_empty">No agents yet. Launch one from the + button.</string>
+    <string name="agents_empty_title">No agents yet</string>
+    <string name="agents_empty_body">Launch your first Cursor cloud agent to start collaborating with AI on your repositories.</string>
+    <string name="agents_loading">Loading agents…</string>
+    <string name="agents_error_title">Couldn\'t load agents</string>
+    <string name="agents_error_body">Check your connection and try again.</string>
+    <string name="agents_retry">Retry</string>
     <string name="agents_new">New agent</string>
+    <string name="agents_pull_to_refresh">Pull to refresh</string>
 
     <!-- Launch -->
     <string name="launch_title">Launch agent</string>
     <string name="launch_repo">Repository</string>
+    <string name="launch_repo_pick">Pick repository</string>
     <string name="launch_branch">Branch</string>
-    <string name="launch_prompt">What should the agent do?</string>
-    <string name="launch_auto_create_pr">Auto create PR</string>
-    <string name="launch_submit">Launch</string>
+    <string name="launch_branch_hint">main</string>
+    <string name="launch_prompt">Prompt</string>
+    <string name="launch_prompt_hint">What should the agent do?</string>
+    <string name="launch_options">Options</string>
+    <string name="launch_auto_create_pr">Auto-create pull request</string>
+    <string name="launch_auto_create_pr_subtitle">Open a draft PR when the agent finishes.</string>
+    <string name="launch_submit">Launch agent</string>
     <string name="launch_attach_image">Attach image</string>
     <string name="launch_voice">Voice input</string>
+    <string name="launch_repo_required">Choose a repository to continue.</string>
+    <string name="launch_prompt_required">Add a prompt to continue.</string>
 
     <!-- Detail -->
     <string name="detail_followup_hint">Send a follow-up…</string>
-    <string name="detail_stop">Stop</string>
-    <string name="detail_delete">Delete</string>
-    <string name="detail_open_pr">Open PR</string>
+    <string name="detail_send">Send</string>
+    <string name="detail_stop">Stop agent</string>
+    <string name="detail_delete">Delete agent</string>
+    <string name="detail_open_pr">Open pull request</string>
+    <string name="detail_more">More</string>
+    <string name="detail_back">Back</string>
+    <string name="detail_loading_title">Loading agent…</string>
+    <string name="detail_error_title">Couldn\'t load agent</string>
+    <string name="detail_error_body">The agent may have been deleted, or your connection dropped. Try again?</string>
+    <string name="detail_no_messages_title">No messages yet</string>
+    <string name="detail_no_messages_body">The agent hasn\'t sent any output. Send a follow-up to nudge it along.</string>
+    <string name="detail_summary">Summary</string>
+    <string name="detail_repo">Repository</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_back">Back</string>
     <string name="settings_api_keys">API keys</string>
+    <string name="settings_api_keys_subtitle">Manage your Cursor API keys</string>
     <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
     <string name="settings_default_model">Default model</string>
+    <string name="settings_default_model_subtitle">Used when launching new agents</string>
     <string name="settings_about">About</string>
+    <string name="settings_about_repo">View source on GitHub</string>
+    <string name="settings_about_license">License</string>
+    <string name="settings_version">Version %1$s</string>
 </resources>
