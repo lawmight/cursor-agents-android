@@ -4,12 +4,7 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!--
-        Adaptive icon foreground: stylised lowercase "c" mark in white, centered
-        in the 72dp safe zone. Drawn as a filled donut-sector (outer arc CCW to
-        inner arc CW) with a 60-degree gap on the right.
-        Outer R = 28, Inner r = 18 around center (54, 54).
-    -->
+    <!-- Themed-icon monochrome layer (Android 13+). Same lowercase "c" mark. -->
     <path
         android:fillColor="#FFFFFF"
         android:pathData="M78.25,40
