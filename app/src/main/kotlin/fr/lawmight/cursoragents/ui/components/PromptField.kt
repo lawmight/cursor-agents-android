@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -23,7 +26,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.KeyboardOptions
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
 @Composable
@@ -55,11 +57,16 @@ fun PromptField(
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             isError = isError,
-            placeholder = placeholder?.let {
-                {
-                    Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            },
+            placeholder =
+                placeholder?.let {
+                    {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                },
             label = label?.let { { Text(it) } },
             minLines = minLines,
             maxLines = maxLines,
@@ -69,13 +76,14 @@ fun PromptField(
             textStyle = MaterialTheme.typography.bodyLarge,
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedLabelColor = MaterialTheme.colorScheme.primary,
-                errorBorderColor = MaterialTheme.colorScheme.error,
-            ),
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    errorBorderColor = MaterialTheme.colorScheme.error,
+                ),
         )
         if (errorMessage != null && isError) {
             Text(
@@ -127,11 +135,7 @@ fun SecurePromptField(
         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.None),
         trailingIcon = {
             GhostIconButton(
-                icon = if (visible) {
-                    androidx.compose.material.icons.Icons.Default.Visibility
-                } else {
-                    androidx.compose.material.icons.Icons.Default.VisibilityOff
-                },
+                icon = if (visible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                 onClick = { visible = !visible },
                 contentDescription = if (visible) "Hide key" else "Show key",
             )

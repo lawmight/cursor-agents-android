@@ -40,13 +40,14 @@ fun AgentCard(
 ) {
     val spacing = LocalSpacing.current
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.large)
-            .clickable(onClick = onClick)
-            .padding(spacing.m),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.large)
+                .clickable(onClick = onClick)
+                .padding(spacing.m),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -108,15 +109,16 @@ private fun fixture(
     id: String = "agent_1",
     status: AgentStatus = AgentStatus.RUNNING,
     summary: String? = "Refactor the navigation host to use type-safe routes",
-): Agent = Agent(
-    id = id,
-    name = "",
-    status = status,
-    source = Source(repository = "https://github.com/lawmight/cursor-agents-android", ref = "main"),
-    target = Target(branchName = "cursor/refactor-routes"),
-    summary = summary,
-    createdAt = "2026-05-12T08:00:00Z",
-)
+): Agent =
+    Agent(
+        id = id,
+        name = "",
+        status = status,
+        source = Source(repository = "https://github.com/lawmight/cursor-agents-android", ref = "main"),
+        target = Target(branchName = "cursor/refactor-routes"),
+        summary = summary,
+        createdAt = "2026-05-12T08:00:00Z",
+    )
 
 @Preview(name = "Light", widthDp = 360)
 @Composable

@@ -41,11 +41,14 @@ import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
 sealed interface AgentListUiState {
     data object Loading : AgentListUiState
+
     data class Empty(val isRefreshing: Boolean = false) : AgentListUiState
+
     data class Loaded(
         val agents: List<Pair<Agent, String>>, // agent + cached "age" string
         val isRefreshing: Boolean = false,
     ) : AgentListUiState
+
     data class Error(val message: String) : AgentListUiState
 }
 
@@ -91,11 +94,12 @@ private fun AgentListContent(
                         contentDescription = stringResource(R.string.settings_title),
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         floatingActionButton = {
@@ -109,48 +113,54 @@ private fun AgentListContent(
         },
         containerColor = MaterialTheme.colorScheme.background,
     ) { pad ->
-        val isRefreshing = when (state) {
-            is AgentListUiState.Loaded -> state.isRefreshing
-            is AgentListUiState.Empty -> state.isRefreshing
-            else -> false
-        }
+        val isRefreshing =
+            when (state) {
+                is AgentListUiState.Loaded -> state.isRefreshing
+                is AgentListUiState.Empty -> state.isRefreshing
+                else -> false
+            }
         val pullState = rememberPullToRefreshState()
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
             state = pullState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(pad),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(pad),
         ) {
             when (state) {
                 is AgentListUiState.Loading -> LoadingContent()
-                is AgentListUiState.Empty -> EmptyState(
-                    title = stringResource(R.string.agents_empty_title),
-                    body = stringResource(R.string.agents_empty_body),
-                    actionLabel = stringResource(R.string.agents_new),
-                    onAction = onLaunch,
-                )
-                is AgentListUiState.Loaded -> LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = spacing.m,
-                        end = spacing.m,
-                        top = spacing.s,
-                        bottom = 96.dp, // make room for the FAB
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(spacing.s),
-                ) {
-                    items(items = state.agents, key = { it.first.id }) { (agent, age) ->
-                        AgentCard(agent = agent, age = age, onClick = { onOpen(agent.id) })
+                is AgentListUiState.Empty ->
+                    EmptyState(
+                        title = stringResource(R.string.agents_empty_title),
+                        body = stringResource(R.string.agents_empty_body),
+                        actionLabel = stringResource(R.string.agents_new),
+                        onAction = onLaunch,
+                    )
+                is AgentListUiState.Loaded ->
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding =
+                            PaddingValues(
+                                start = spacing.m,
+                                end = spacing.m,
+                                top = spacing.s,
+                                bottom = 96.dp, // make room for the FAB
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(spacing.s),
+                    ) {
+                        items(items = state.agents, key = { it.first.id }) { (agent, age) ->
+                            AgentCard(agent = agent, age = age, onClick = { onOpen(agent.id) })
+                        }
                     }
-                }
-                is AgentListUiState.Error -> ErrorState(
-                    title = stringResource(R.string.agents_error_title),
-                    body = state.message,
-                    retryLabel = stringResource(R.string.agents_retry),
-                    onRetry = onRetry,
-                )
+                is AgentListUiState.Error ->
+                    ErrorState(
+                        title = stringResource(R.string.agents_error_title),
+                        body = state.message,
+                        retryLabel = stringResource(R.string.agents_retry),
+                        onRetry = onRetry,
+                    )
             }
         }
     }
@@ -172,24 +182,27 @@ private fun fixtureAgent(
     status: AgentStatus,
     summary: String?,
     branch: String? = "main",
-): Agent = Agent(
-    id = id,
-    status = status,
-    source = Source(repository = "https://github.com/lawmight/cursor-agents-android", ref = branch),
-    target = Target(branchName = "cursor/$id"),
-    summary = summary,
-    createdAt = "2026-05-12T08:00:00Z",
-)
+): Agent =
+    Agent(
+        id = id,
+        status = status,
+        source = Source(repository = "https://github.com/lawmight/cursor-agents-android", ref = branch),
+        target = Target(branchName = "cursor/$id"),
+        summary = summary,
+        createdAt = "2026-05-12T08:00:00Z",
+    )
 
-private fun fixtureLoaded() = AgentListUiState.Loaded(
-    agents = listOf(
-        fixtureAgent("a1", AgentStatus.RUNNING, "Refactor navigation host to use type-safe routes") to "2m ago",
-        fixtureAgent("a2", AgentStatus.FINISHED, "PR #42: Visual foundation v0") to "1h ago",
-        fixtureAgent("a3", AgentStatus.CREATING, "Bundle Inter + JetBrains Mono fonts") to "5m ago",
-        fixtureAgent("a4", AgentStatus.FAILED, "Failed: detekt complexity > 15") to "yesterday",
-        fixtureAgent("a5", AgentStatus.STOPPED, "Stopped by user") to "2d ago",
-    ),
-)
+private fun fixtureLoaded() =
+    AgentListUiState.Loaded(
+        agents =
+            listOf(
+                fixtureAgent("a1", AgentStatus.RUNNING, "Refactor navigation host to use type-safe routes") to "2m ago",
+                fixtureAgent("a2", AgentStatus.FINISHED, "PR #42: Visual foundation v0") to "1h ago",
+                fixtureAgent("a3", AgentStatus.CREATING, "Bundle Inter + JetBrains Mono fonts") to "5m ago",
+                fixtureAgent("a4", AgentStatus.FAILED, "Failed: detekt complexity > 15") to "yesterday",
+                fixtureAgent("a5", AgentStatus.STOPPED, "Stopped by user") to "2d ago",
+            ),
+    )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "Light - loaded", widthDp = 360, heightDp = 720)

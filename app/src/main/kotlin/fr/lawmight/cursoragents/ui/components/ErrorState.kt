@@ -36,17 +36,19 @@ fun ErrorState(
 ) {
     val spacing = LocalSpacing.current
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(spacing.l),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(spacing.l),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.errorContainer),
+            modifier =
+                Modifier
+                    .size(72.dp)
+                    .clip(MaterialTheme.shapes.large)
+                    .background(MaterialTheme.colorScheme.errorContainer),
             contentAlignment = Alignment.Center,
         ) {
             Icon(

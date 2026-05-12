@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
@@ -21,14 +22,16 @@ fun SectionHeader(
     val spacing = LocalSpacing.current
     Text(
         text = text.uppercase(),
-        style = MaterialTheme.typography.labelSmall.copy(
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 1.sp,
-        ),
+        style =
+            MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 1.sp,
+            ),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = spacing.m, vertical = spacing.xs),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.m, vertical = spacing.xs),
     )
 }
 

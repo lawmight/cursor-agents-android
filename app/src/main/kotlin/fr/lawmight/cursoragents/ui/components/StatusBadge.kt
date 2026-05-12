@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -41,66 +42,75 @@ fun StatusBadge(
     val palette = LocalStatusColors.current
     val (bg, fg) = palette.colorsFor(status)
     val showPulse = status == AgentStatus.RUNNING || status == AgentStatus.CREATING
-    val (paddingH, paddingV, dotSize, fontSp) = when (size) {
-        StatusBadgeSize.Small -> StatusMetrics(8.dp, 3.dp, 6.dp, 11)
-        StatusBadgeSize.Medium -> StatusMetrics(10.dp, 5.dp, 7.dp, 12)
-    }
+    val metrics =
+        when (size) {
+            StatusBadgeSize.Small -> StatusMetrics(8.dp, 3.dp, 6.dp, 11)
+            StatusBadgeSize.Medium -> StatusMetrics(10.dp, 5.dp, 7.dp, 12)
+        }
 
     Row(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.extraSmall)
-            .background(bg)
-            .padding(horizontal = paddingH, vertical = paddingV),
+        modifier =
+            modifier
+                .clip(MaterialTheme.shapes.extraSmall)
+                .background(bg)
+                .padding(horizontal = metrics.padH, vertical = metrics.padV),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (showPulse) {
-            PulsingDot(color = fg, size = dotSize)
+            PulsingDot(color = fg, size = metrics.dot)
             Spacer(Modifier.width(6.dp))
         }
         Text(
             text = status.label(),
             color = fg,
-            style = MaterialTheme.typography.labelSmall.copy(fontSize = fontSp.sp),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = metrics.fontSp.sp),
         )
     }
 }
 
-private fun StatusColors.colorsFor(status: AgentStatus): Pair<Color, Color> = when (status) {
-    AgentStatus.CREATING -> creating to onCreating
-    AgentStatus.RUNNING -> running to onRunning
-    AgentStatus.FINISHED -> finished to onFinished
-    AgentStatus.STOPPED -> stopped to onStopped
-    AgentStatus.FAILED -> failed to onFailed
-}
+private fun StatusColors.colorsFor(status: AgentStatus): Pair<Color, Color> =
+    when (status) {
+        AgentStatus.CREATING -> creating to onCreating
+        AgentStatus.RUNNING -> running to onRunning
+        AgentStatus.FINISHED -> finished to onFinished
+        AgentStatus.STOPPED -> stopped to onStopped
+        AgentStatus.FAILED -> failed to onFailed
+    }
 
-private fun AgentStatus.label(): String = when (this) {
-    AgentStatus.CREATING -> "Creating"
-    AgentStatus.RUNNING -> "Running"
-    AgentStatus.FINISHED -> "Finished"
-    AgentStatus.STOPPED -> "Stopped"
-    AgentStatus.FAILED -> "Failed"
-}
+private fun AgentStatus.label(): String =
+    when (this) {
+        AgentStatus.CREATING -> "Creating"
+        AgentStatus.RUNNING -> "Running"
+        AgentStatus.FINISHED -> "Finished"
+        AgentStatus.STOPPED -> "Stopped"
+        AgentStatus.FAILED -> "Failed"
+    }
 
 private data class StatusMetrics(val padH: Dp, val padV: Dp, val dot: Dp, val fontSp: Int)
 
 @Composable
-private fun PulsingDot(color: Color, size: Dp) {
+private fun PulsingDot(
+    color: Color,
+    size: Dp,
+) {
     val transition = rememberInfiniteTransition(label = "status-pulse")
     val alpha by transition.animateFloat(
         initialValue = 0.4f,
         targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 900),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 900),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "status-pulse-alpha",
     )
     Box(
-        modifier = Modifier
-            .size(size)
-            .clip(CircleShape)
-            .alpha(alpha)
-            .background(color),
+        modifier =
+            Modifier
+                .size(size)
+                .clip(CircleShape)
+                .alpha(alpha)
+                .background(color),
     )
 }
 

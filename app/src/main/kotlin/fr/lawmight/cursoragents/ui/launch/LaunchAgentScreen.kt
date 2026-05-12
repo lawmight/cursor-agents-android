@@ -2,7 +2,6 @@ package fr.lawmight.cursoragents.ui.launch
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -108,11 +107,12 @@ private fun LaunchAgentContent(
                         contentDescription = stringResource(R.string.detail_back),
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         bottomBar = {
@@ -137,9 +137,10 @@ private fun LaunchAgentContent(
         containerColor = MaterialTheme.colorScheme.background,
     ) { pad ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(pad),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(pad),
             contentPadding = PaddingValues(bottom = spacing.l),
         ) {
             item { SectionHeader(text = stringResource(R.string.launch_repo)) }
@@ -165,9 +166,10 @@ private fun LaunchAgentContent(
                     value = state.branch,
                     onValueChange = onBranchChange,
                     placeholder = stringResource(R.string.launch_branch_hint),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = spacing.m),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = spacing.m),
                 )
             }
 
@@ -196,9 +198,10 @@ private fun LaunchAgentContent(
                             )
                         }
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = spacing.m),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = spacing.m),
                 )
             }
 
@@ -231,12 +234,13 @@ private fun LaunchAgentContent(
 private fun EmptyRepoSlot(onPick: () -> Unit) {
     val spacing = LocalSpacing.current
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .clickable(onClick = onPick)
-            .padding(horizontal = spacing.m, vertical = spacing.s),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .clickable(onClick = onPick)
+                .padding(horizontal = spacing.m, vertical = spacing.s),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -255,12 +259,13 @@ private fun AutoPrRow(
 ) {
     val spacing = LocalSpacing.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable { onChange(!enabled) }
-            .padding(horizontal = spacing.m, vertical = spacing.s),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .clickable { onChange(!enabled) }
+                .padding(horizontal = spacing.m, vertical = spacing.s),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -278,10 +283,11 @@ private fun AutoPrRow(
         Switch(
             checked = enabled,
             onCheckedChange = onChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                checkedTrackColor = MaterialTheme.colorScheme.primary,
-            ),
+            colors =
+                SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                ),
         )
     }
 }
@@ -293,8 +299,13 @@ private fun LaunchPreviewLightEmpty() {
     PreviewSurface(darkTheme = false) {
         LaunchAgentContent(
             state = LaunchUiState(),
-            onBack = {}, onPickRepo = {}, onClearRepo = {},
-            onBranchChange = {}, onPromptChange = {}, onAutoPrChange = {}, onLaunch = {},
+            onBack = {},
+            onPickRepo = {},
+            onClearRepo = {},
+            onBranchChange = {},
+            onPromptChange = {},
+            onAutoPrChange = {},
+            onLaunch = {},
         )
     }
 }
@@ -305,15 +316,23 @@ private fun LaunchPreviewLightEmpty() {
 private fun LaunchPreviewLightFilled() {
     PreviewSurface(darkTheme = false) {
         LaunchAgentContent(
-            state = LaunchUiState(
-                repoOwner = "lawmight",
-                repoName = "cursor-agents-android",
-                branch = "main",
-                prompt = "Refactor the navigation host to use type-safe routes and remove the legacy agent/{id} pattern.",
-                autoCreatePr = true,
-            ),
-            onBack = {}, onPickRepo = {}, onClearRepo = {},
-            onBranchChange = {}, onPromptChange = {}, onAutoPrChange = {}, onLaunch = {},
+            state =
+                LaunchUiState(
+                    repoOwner = "lawmight",
+                    repoName = "cursor-agents-android",
+                    branch = "main",
+                    prompt =
+                        "Refactor the navigation host to use type-safe routes " +
+                            "and remove the legacy agent/{id} pattern.",
+                    autoCreatePr = true,
+                ),
+            onBack = {},
+            onPickRepo = {},
+            onClearRepo = {},
+            onBranchChange = {},
+            onPromptChange = {},
+            onAutoPrChange = {},
+            onLaunch = {},
         )
     }
 }
@@ -325,8 +344,13 @@ private fun LaunchPreviewDarkEmpty() {
     PreviewSurface(darkTheme = true) {
         LaunchAgentContent(
             state = LaunchUiState(),
-            onBack = {}, onPickRepo = {}, onClearRepo = {},
-            onBranchChange = {}, onPromptChange = {}, onAutoPrChange = {}, onLaunch = {},
+            onBack = {},
+            onPickRepo = {},
+            onClearRepo = {},
+            onBranchChange = {},
+            onPromptChange = {},
+            onAutoPrChange = {},
+            onLaunch = {},
         )
     }
 }
@@ -337,15 +361,21 @@ private fun LaunchPreviewDarkEmpty() {
 private fun LaunchPreviewDarkLaunching() {
     PreviewSurface(darkTheme = true) {
         LaunchAgentContent(
-            state = LaunchUiState(
-                repoOwner = "lawmight",
-                repoName = "cursor-agents-android",
-                branch = "main",
-                prompt = "Bundle Inter + JetBrains Mono fonts and rewrite Type.kt.",
-                isLaunching = true,
-            ),
-            onBack = {}, onPickRepo = {}, onClearRepo = {},
-            onBranchChange = {}, onPromptChange = {}, onAutoPrChange = {}, onLaunch = {},
+            state =
+                LaunchUiState(
+                    repoOwner = "lawmight",
+                    repoName = "cursor-agents-android",
+                    branch = "main",
+                    prompt = "Bundle Inter + JetBrains Mono fonts and rewrite Type.kt.",
+                    isLaunching = true,
+                ),
+            onBack = {},
+            onPickRepo = {},
+            onClearRepo = {},
+            onBranchChange = {},
+            onPromptChange = {},
+            onAutoPrChange = {},
+            onLaunch = {},
         )
     }
 }

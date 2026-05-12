@@ -38,10 +38,11 @@ fun BrandMark(
     foreground: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
     Box(
-        modifier = modifier
-            .size(size)
-            .clip(MaterialTheme.shapes.large)
-            .background(background),
+        modifier =
+            modifier
+                .size(size)
+                .clip(MaterialTheme.shapes.large)
+                .background(background),
         contentAlignment = Alignment.Center,
     ) {
         Canvas(modifier = Modifier.size(size)) {

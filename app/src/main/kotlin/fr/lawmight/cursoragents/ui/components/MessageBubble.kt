@@ -30,21 +30,24 @@ fun MessageBubble(
 ) {
     val spacing = LocalSpacing.current
     val isUser = author == MessageAuthor.User
-    val bubbleShape = if (isUser) {
-        RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp)
-    } else {
-        RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 16.dp)
-    }
-    val bubbleColor: Color = if (isUser) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant
-    }
-    val contentColor: Color = if (isUser) {
-        MaterialTheme.colorScheme.onPrimary
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
+    val bubbleShape =
+        if (isUser) {
+            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp)
+        } else {
+            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 16.dp)
+        }
+    val bubbleColor: Color =
+        if (isUser) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        }
+    val contentColor: Color =
+        if (isUser) {
+            MaterialTheme.colorScheme.onPrimary
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        }
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start,
@@ -54,17 +57,19 @@ fun MessageBubble(
                 text = if (isUser) "You" else "Agent",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(
-                    start = if (isUser) 0.dp else spacing.xs,
-                    end = if (isUser) spacing.xs else 0.dp,
-                    bottom = spacing.xxs,
-                ),
+                modifier =
+                    Modifier.padding(
+                        start = if (isUser) 0.dp else spacing.xs,
+                        end = if (isUser) spacing.xs else 0.dp,
+                        bottom = spacing.xxs,
+                    ),
             )
             Box(
-                modifier = Modifier
-                    .clip(bubbleShape)
-                    .background(bubbleColor)
-                    .padding(horizontal = spacing.s, vertical = spacing.xs),
+                modifier =
+                    Modifier
+                        .clip(bubbleShape)
+                        .background(bubbleColor)
+                        .padding(horizontal = spacing.s, vertical = spacing.xs),
             ) {
                 Text(
                     text = text,

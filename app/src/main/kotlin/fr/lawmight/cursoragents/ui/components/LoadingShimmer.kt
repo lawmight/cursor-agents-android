@@ -21,8 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -41,26 +41,29 @@ fun ShimmerBlock(
     val progress by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200),
-            repeatMode = RepeatMode.Restart,
-        ),
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(durationMillis = 1200),
+                repeatMode = RepeatMode.Restart,
+            ),
         label = "shimmer-progress",
     )
     val base = MaterialTheme.colorScheme.surfaceVariant
     val highlight = MaterialTheme.colorScheme.surface
     val shimmerWidth = 240f
     val translate = (-shimmerWidth) + (progress * (shimmerWidth * 2))
-    val brush = Brush.linearGradient(
-        colors = listOf(base, highlight, base),
-        start = Offset(translate, 0f),
-        end = Offset(translate + shimmerWidth, 0f),
-    )
+    val brush =
+        Brush.linearGradient(
+            colors = listOf(base, highlight, base),
+            start = Offset(translate, 0f),
+            end = Offset(translate + shimmerWidth, 0f),
+        )
     Box(
-        modifier = modifier
-            .height(height)
-            .clip(MaterialTheme.shapes.small)
-            .background(brush),
+        modifier =
+            modifier
+                .height(height)
+                .clip(MaterialTheme.shapes.small)
+                .background(brush),
     )
 }
 
@@ -71,11 +74,12 @@ fun ShimmerBlock(
 fun AgentCardShimmer(modifier: Modifier = Modifier) {
     val spacing = LocalSpacing.current
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(spacing.m),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(spacing.m),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             ShimmerBlock(modifier = Modifier.width(60.dp), height = 18.dp)
@@ -93,16 +97,18 @@ fun AgentCardShimmer(modifier: Modifier = Modifier) {
 fun ListItemShimmer(modifier: Modifier = Modifier) {
     val spacing = LocalSpacing.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = spacing.m, vertical = spacing.s),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = spacing.m, vertical = spacing.s),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(32.dp)
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+            modifier =
+                Modifier
+                    .size(32.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
         )
         Spacer(Modifier.width(spacing.s))
         Column(modifier = Modifier.fillMaxWidth()) {

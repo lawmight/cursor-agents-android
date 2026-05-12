@@ -31,11 +31,12 @@ fun RepoChip(
     onClose: (() -> Unit)? = null,
 ) {
     val spacing = LocalSpacing.current
-    val rowMod = modifier
-        .clip(MaterialTheme.shapes.small)
-        .background(MaterialTheme.colorScheme.surfaceVariant)
-        .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-        .padding(horizontal = spacing.s, vertical = spacing.xs)
+    val rowMod =
+        modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .let { if (onClick != null) it.clickable(onClick = onClick) else it }
+            .padding(horizontal = spacing.s, vertical = spacing.xs)
     Row(
         modifier = rowMod,
         verticalAlignment = Alignment.CenterVertically,
@@ -62,10 +63,11 @@ fun RepoChip(
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Remove",
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
-                    .clickable(onClick = onClose),
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .clickable(onClick = onClose),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }

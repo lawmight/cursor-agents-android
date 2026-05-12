@@ -2,8 +2,6 @@ package fr.lawmight.cursoragents.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
@@ -94,11 +92,12 @@ private fun SettingsContent(
                         contentDescription = stringResource(R.string.settings_back),
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         containerColor = MaterialTheme.colorScheme.background,
@@ -192,7 +191,7 @@ private fun SettingsContent(
                     title = stringResource(R.string.settings_about_license),
                     leading = {
                         Icon(
-                            Icons.Default.Article,
+                            Icons.AutoMirrored.Filled.Article,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
                         )
@@ -212,20 +211,26 @@ private fun SettingsContent(
 }
 
 @Composable
-private fun ThemeRow(choice: ThemeChoice, selected: Boolean, onSelect: () -> Unit) {
+private fun ThemeRow(
+    choice: ThemeChoice,
+    selected: Boolean,
+    onSelect: () -> Unit,
+) {
     val spacing = LocalSpacing.current
-    val label = stringResource(
-        when (choice) {
-            ThemeChoice.System -> R.string.settings_theme_system
-            ThemeChoice.Light -> R.string.settings_theme_light
-            ThemeChoice.Dark -> R.string.settings_theme_dark
-        },
-    )
+    val label =
+        stringResource(
+            when (choice) {
+                ThemeChoice.System -> R.string.settings_theme_system
+                ThemeChoice.Light -> R.string.settings_theme_light
+                ThemeChoice.Dark -> R.string.settings_theme_dark
+            },
+        )
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onSelect)
-            .padding(horizontal = spacing.m, vertical = spacing.s),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onSelect)
+                .padding(horizontal = spacing.m, vertical = spacing.s),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -235,18 +240,20 @@ private fun ThemeRow(choice: ThemeChoice, selected: Boolean, onSelect: () -> Uni
         )
         Text(
             text = label,
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = spacing.m),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(start = spacing.m),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
         RadioButton(
             selected = selected,
             onClick = onSelect,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = MaterialTheme.colorScheme.primary,
-            ),
+            colors =
+                RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colorScheme.primary,
+                ),
         )
     }
 }
@@ -258,8 +265,12 @@ private fun SettingsPreviewLight() {
     PreviewSurface(darkTheme = false) {
         SettingsContent(
             state = SettingsUiState(),
-            onBack = {}, onApiKeys = {}, onThemeChange = {}, onDefaultModel = {},
-            onAboutRepo = {}, onAboutLicense = {},
+            onBack = {},
+            onApiKeys = {},
+            onThemeChange = {},
+            onDefaultModel = {},
+            onAboutRepo = {},
+            onAboutLicense = {},
         )
     }
 }
@@ -271,8 +282,12 @@ private fun SettingsPreviewDark() {
     PreviewSurface(darkTheme = true) {
         SettingsContent(
             state = SettingsUiState(theme = ThemeChoice.Dark),
-            onBack = {}, onApiKeys = {}, onThemeChange = {}, onDefaultModel = {},
-            onAboutRepo = {}, onAboutLicense = {},
+            onBack = {},
+            onApiKeys = {},
+            onThemeChange = {},
+            onDefaultModel = {},
+            onAboutRepo = {},
+            onAboutLicense = {},
         )
     }
 }

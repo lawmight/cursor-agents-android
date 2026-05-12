@@ -35,10 +35,11 @@ fun PrimaryButton(
         enabled = enabled && !loading,
         modifier = modifier.defaultMinSize(minHeight = 48.dp),
         shape = MaterialTheme.shapes.medium,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
     ) {
         if (loading) {
             CircularProgressIndicator(

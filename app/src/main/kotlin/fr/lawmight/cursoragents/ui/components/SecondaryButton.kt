@@ -34,9 +34,10 @@ fun SecondaryButton(
         modifier = modifier.defaultMinSize(minHeight = 48.dp),
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-        colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
+        colors =
+            ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
     ) {
         if (leadingIcon != null) {
             Icon(leadingIcon, contentDescription = null, modifier = Modifier.size(18.dp))

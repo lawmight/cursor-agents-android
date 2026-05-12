@@ -9,49 +9,51 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val DarkColors = darkColorScheme(
-    primary = Accent,
-    onPrimary = OnAccent,
-    primaryContainer = AccentPressed,
-    onPrimaryContainer = OnAccent,
-    secondary = AccentMuted,
-    onSecondary = OnAccent,
-    background = DarkBg,
-    onBackground = DarkOnSurface,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkOnSurfaceMuted,
-    surfaceTint = Accent,
-    outline = DarkOutline,
-    outlineVariant = DarkOutlineVariant,
-    error = DarkError,
-    onError = Color.White,
-    inverseSurface = LightSurface,
-    inverseOnSurface = LightOnSurface,
-)
+private val DarkColors =
+    darkColorScheme(
+        primary = Accent,
+        onPrimary = OnAccent,
+        primaryContainer = AccentPressed,
+        onPrimaryContainer = OnAccent,
+        secondary = AccentMuted,
+        onSecondary = OnAccent,
+        background = DarkBg,
+        onBackground = DarkOnSurface,
+        surface = DarkSurface,
+        onSurface = DarkOnSurface,
+        surfaceVariant = DarkSurfaceVariant,
+        onSurfaceVariant = DarkOnSurfaceMuted,
+        surfaceTint = Accent,
+        outline = DarkOutline,
+        outlineVariant = DarkOutlineVariant,
+        error = DarkError,
+        onError = Color.White,
+        inverseSurface = LightSurface,
+        inverseOnSurface = LightOnSurface,
+    )
 
-private val LightColors = lightColorScheme(
-    primary = Accent,
-    onPrimary = OnAccent,
-    primaryContainer = AccentMuted,
-    onPrimaryContainer = LightOnSurface,
-    secondary = AccentPressed,
-    onSecondary = OnAccent,
-    background = LightBg,
-    onBackground = LightOnBackground,
-    surface = LightSurface,
-    onSurface = LightOnSurface,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = LightOnSurfaceMuted,
-    surfaceTint = Accent,
-    outline = LightOutline,
-    outlineVariant = LightOutlineVariant,
-    error = LightError,
-    onError = Color.White,
-    inverseSurface = DarkSurface,
-    inverseOnSurface = DarkOnSurface,
-)
+private val LightColors =
+    lightColorScheme(
+        primary = Accent,
+        onPrimary = OnAccent,
+        primaryContainer = AccentMuted,
+        onPrimaryContainer = LightOnSurface,
+        secondary = AccentPressed,
+        onSecondary = OnAccent,
+        background = LightBg,
+        onBackground = LightOnBackground,
+        surface = LightSurface,
+        onSurface = LightOnSurface,
+        surfaceVariant = LightSurfaceVariant,
+        onSurfaceVariant = LightOnSurfaceMuted,
+        surfaceTint = Accent,
+        outline = LightOutline,
+        outlineVariant = LightOutlineVariant,
+        error = LightError,
+        onError = Color.White,
+        inverseSurface = DarkSurface,
+        inverseOnSurface = DarkOnSurface,
+    )
 
 data class StatusColors(
     val creating: Color,
@@ -66,31 +68,33 @@ data class StatusColors(
     val onFailed: Color,
 )
 
-internal val DarkStatusColors = StatusColors(
-    creating = StatusCreating,
-    onCreating = StatusCreatingDarkOn,
-    running = StatusRunning,
-    onRunning = StatusRunningDarkOn,
-    finished = StatusFinished,
-    onFinished = StatusFinishedDarkOn,
-    stopped = StatusStopped,
-    onStopped = StatusStoppedDarkOn,
-    failed = StatusFailed,
-    onFailed = StatusFailedDarkOn,
-)
+internal val DarkStatusColors =
+    StatusColors(
+        creating = StatusCreating,
+        onCreating = StatusCreatingDarkOn,
+        running = StatusRunning,
+        onRunning = StatusRunningDarkOn,
+        finished = StatusFinished,
+        onFinished = StatusFinishedDarkOn,
+        stopped = StatusStopped,
+        onStopped = StatusStoppedDarkOn,
+        failed = StatusFailed,
+        onFailed = StatusFailedDarkOn,
+    )
 
-internal val LightStatusColors = StatusColors(
-    creating = StatusCreating,
-    onCreating = StatusCreatingLightOn,
-    running = StatusRunning,
-    onRunning = StatusRunningLightOn,
-    finished = StatusFinished,
-    onFinished = StatusFinishedLightOn,
-    stopped = StatusStopped,
-    onStopped = StatusStoppedLightOn,
-    failed = StatusFailed,
-    onFailed = StatusFailedLightOn,
-)
+internal val LightStatusColors =
+    StatusColors(
+        creating = StatusCreating,
+        onCreating = StatusCreatingLightOn,
+        running = StatusRunning,
+        onRunning = StatusRunningLightOn,
+        finished = StatusFinished,
+        onFinished = StatusFinishedLightOn,
+        stopped = StatusStopped,
+        onStopped = StatusStoppedLightOn,
+        failed = StatusFailed,
+        onFailed = StatusFailedLightOn,
+    )
 
 val LocalStatusColors = staticCompositionLocalOf { DarkStatusColors }
 

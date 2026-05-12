@@ -1,6 +1,5 @@
 package fr.lawmight.cursoragents.data.api
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

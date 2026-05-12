@@ -65,17 +65,22 @@ import fr.lawmight.cursoragents.ui.components.StatusBadge
 
 sealed interface AgentDetailUiState {
     data object Loading : AgentDetailUiState
+
     data class Loaded(
         val agent: Agent,
         val conversation: AgentConversation,
         val isSendingFollowup: Boolean = false,
     ) : AgentDetailUiState
+
     data class Error(val message: String) : AgentDetailUiState
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AgentDetailScreen(agentId: String, onClose: () -> Unit) {
+fun AgentDetailScreen(
+    agentId: String,
+    onClose: () -> Unit,
+) {
     val state: AgentDetailUiState = remember(agentId) { fixtureLoaded(agentId) }
     var followup by remember { mutableStateOf("") }
     AgentDetailContent(
@@ -148,31 +153,41 @@ private fun AgentDetailContent(
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.detail_stop)) },
                                         leadingIcon = { Icon(Icons.Default.Stop, null) },
-                                        onClick = { menuOpen = false; onStop() },
+                                        onClick = {
+                                            menuOpen = false
+                                            onStop()
+                                        },
                                     )
                                 }
                                 if (state.agent.target.prUrl != null) {
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.detail_open_pr)) },
                                         leadingIcon = { Icon(Icons.AutoMirrored.Filled.OpenInNew, null) },
-                                        onClick = { menuOpen = false; onOpenPr() },
+                                        onClick = {
+                                            menuOpen = false
+                                            onOpenPr()
+                                        },
                                     )
                                 }
                                 DropdownMenuItem(
                                     text = { Text(stringResource(R.string.detail_delete)) },
                                     leadingIcon = { Icon(Icons.Default.Delete, null) },
-                                    onClick = { menuOpen = false; onDelete() },
+                                    onClick = {
+                                        menuOpen = false
+                                        onDelete()
+                                    },
                                 )
                             }
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                    actionIconContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                        actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
             )
         },
         bottomBar = {
@@ -189,22 +204,27 @@ private fun AgentDetailContent(
     ) { pad ->
         when (state) {
             is AgentDetailUiState.Loading -> LoadingContent(modifier = Modifier.padding(pad))
-            is AgentDetailUiState.Error -> ErrorState(
-                title = stringResource(R.string.detail_error_title),
-                body = state.message,
-                onRetry = onRetry,
-                modifier = Modifier.padding(pad),
-            )
-            is AgentDetailUiState.Loaded -> LoadedContent(
-                state = state,
-                modifier = Modifier.padding(pad),
-            )
+            is AgentDetailUiState.Error ->
+                ErrorState(
+                    title = stringResource(R.string.detail_error_title),
+                    body = state.message,
+                    onRetry = onRetry,
+                    modifier = Modifier.padding(pad),
+                )
+            is AgentDetailUiState.Loaded ->
+                LoadedContent(
+                    state = state,
+                    modifier = Modifier.padding(pad),
+                )
         }
     }
 }
 
 @Composable
-private fun LoadedContent(state: AgentDetailUiState.Loaded, modifier: Modifier = Modifier) {
+private fun LoadedContent(
+    state: AgentDetailUiState.Loaded,
+    modifier: Modifier = Modifier,
+) {
     val spacing = fr.lawmight.cursoragents.ui.theme.LocalSpacing.current
     val listState = rememberLazyListState()
     LaunchedEffect(state.conversation.messages.size) {
@@ -232,8 +252,9 @@ private fun LoadedContent(state: AgentDetailUiState.Loaded, modifier: Modifier =
                 )
                 Spacer(Modifier.size(spacing.xs))
                 Text(
-                    text = state.agent.source.repository.removePrefix("https://github.com/") +
-                        (state.agent.source.ref?.let { "  ·  $it" } ?: ""),
+                    text =
+                        state.agent.source.repository.removePrefix("https://github.com/") +
+                            (state.agent.source.ref?.let { "  ·  $it" } ?: ""),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
@@ -303,10 +324,11 @@ private fun FollowUpBar(
         Column {
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(spacing.m),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(spacing.m),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(spacing.xs),
             ) {
@@ -331,31 +353,58 @@ private fun FollowUpBar(
 }
 
 @Composable
-private fun AgentDetailUiState.titleText(): String = when (this) {
-    is AgentDetailUiState.Loading -> stringResource(R.string.detail_loading_title)
-    is AgentDetailUiState.Error -> stringResource(R.string.detail_error_title)
-    is AgentDetailUiState.Loaded -> agent.summary?.takeIf { it.isNotBlank() } ?: "Agent"
-}
+private fun AgentDetailUiState.titleText(): String =
+    when (this) {
+        is AgentDetailUiState.Loading -> stringResource(R.string.detail_loading_title)
+        is AgentDetailUiState.Error -> stringResource(R.string.detail_error_title)
+        is AgentDetailUiState.Loaded -> agent.summary?.takeIf { it.isNotBlank() } ?: "Agent"
+    }
 
-private fun fixtureLoaded(id: String) = AgentDetailUiState.Loaded(
-    agent = Agent(
-        id = id,
-        status = AgentStatus.RUNNING,
-        source = Source(repository = "https://github.com/lawmight/cursor-agents-android", ref = "main"),
-        target = Target(branchName = "cursor/$id", prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42"),
-        summary = "Refactor navigation host",
-        createdAt = "2026-05-12T08:00:00Z",
-    ),
-    conversation = AgentConversation(
-        id = id,
-        messages = listOf(
-            ConversationMessage("m1", "user", "Refactor the navigation host to use type-safe routes."),
-            ConversationMessage("m2", "agent", "I'll start by inspecting AppNavHost.kt and listing the current routes."),
-            ConversationMessage("m3", "user", "Sounds good — also drop the legacy `agent/{id}` pattern."),
-            ConversationMessage("m4", "agent", "Got it. I'll wire the new sealed Routes type and migrate the call sites."),
-        ),
-    ),
-)
+private fun fixtureLoaded(id: String) =
+    AgentDetailUiState.Loaded(
+        agent =
+            Agent(
+                id = id,
+                status = AgentStatus.RUNNING,
+                source = Source(
+                    repository = "https://github.com/lawmight/cursor-agents-android",
+                    ref = "main",
+                ),
+                target = Target(
+                    branchName = "cursor/$id",
+                    prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42",
+                ),
+                summary = "Refactor navigation host",
+                createdAt = "2026-05-12T08:00:00Z",
+            ),
+        conversation =
+            AgentConversation(
+                id = id,
+                messages =
+                    listOf(
+                        ConversationMessage(
+                            id = "m1",
+                            type = "user",
+                            text = "Refactor the navigation host to use type-safe routes.",
+                        ),
+                        ConversationMessage(
+                            id = "m2",
+                            type = "agent",
+                            text = "I'll start by inspecting AppNavHost.kt and listing the current routes.",
+                        ),
+                        ConversationMessage(
+                            id = "m3",
+                            type = "user",
+                            text = "Sounds good — also drop the legacy `agent/{id}` pattern.",
+                        ),
+                        ConversationMessage(
+                            id = "m4",
+                            type = "agent",
+                            text = "Got it. I'll wire the new sealed Routes type and migrate the call sites.",
+                        ),
+                    ),
+            ),
+    )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(name = "Light - loaded", widthDp = 360, heightDp = 720)

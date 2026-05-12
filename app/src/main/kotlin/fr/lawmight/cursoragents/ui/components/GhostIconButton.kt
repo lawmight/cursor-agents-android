@@ -30,28 +30,32 @@ fun GhostIconButton(
 ) {
     val sizeMod = modifier.size(40.dp)
     when (variant) {
-        GhostIconButtonVariant.Ghost -> IconButton(
-            onClick = onClick,
-            enabled = enabled,
-            modifier = sizeMod,
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
-            Icon(icon, contentDescription = contentDescription, modifier = Modifier.size(20.dp))
-        }
-        GhostIconButtonVariant.Tonal -> FilledTonalIconButton(
-            onClick = onClick,
-            enabled = enabled,
-            modifier = sizeMod,
-            shape = MaterialTheme.shapes.small,
-            colors = IconButtonDefaults.filledTonalIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
-            Icon(icon, contentDescription = contentDescription, modifier = Modifier.size(20.dp))
-        }
+        GhostIconButtonVariant.Ghost ->
+            IconButton(
+                onClick = onClick,
+                enabled = enabled,
+                modifier = sizeMod,
+                colors =
+                    IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+            ) {
+                Icon(icon, contentDescription = contentDescription, modifier = Modifier.size(20.dp))
+            }
+        GhostIconButtonVariant.Tonal ->
+            FilledTonalIconButton(
+                onClick = onClick,
+                enabled = enabled,
+                modifier = sizeMod,
+                shape = MaterialTheme.shapes.small,
+                colors =
+                    IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+            ) {
+                Icon(icon, contentDescription = contentDescription, modifier = Modifier.size(20.dp))
+            }
     }
 }
 
@@ -64,7 +68,12 @@ private fun GhostIconButtonPreviewLight() {
         ) {
             GhostIconButton(Icons.Default.Settings, onClick = {}, contentDescription = "Settings")
             GhostIconButton(Icons.Default.MoreVert, onClick = {}, contentDescription = "More")
-            GhostIconButton(Icons.Default.Close, onClick = {}, contentDescription = "Close", variant = GhostIconButtonVariant.Tonal)
+            GhostIconButton(
+                icon = Icons.Default.Close,
+                onClick = {},
+                contentDescription = "Close",
+                variant = GhostIconButtonVariant.Tonal,
+            )
         }
     }
 }
@@ -78,7 +87,12 @@ private fun GhostIconButtonPreviewDark() {
         ) {
             GhostIconButton(Icons.Default.Settings, onClick = {}, contentDescription = "Settings")
             GhostIconButton(Icons.Default.MoreVert, onClick = {}, contentDescription = "More")
-            GhostIconButton(Icons.Default.Close, onClick = {}, contentDescription = "Close", variant = GhostIconButtonVariant.Tonal)
+            GhostIconButton(
+                icon = Icons.Default.Close,
+                onClick = {},
+                contentDescription = "Close",
+                variant = GhostIconButtonVariant.Tonal,
+            )
         }
     }
 }

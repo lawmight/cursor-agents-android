@@ -1,6 +1,5 @@
 package fr.lawmight.cursoragents.ui.onboarding
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -69,11 +68,12 @@ private fun OnboardingContent(
     val spacing = LocalSpacing.current
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = spacing.l)
-                .padding(top = spacing.xl, bottom = spacing.l),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = spacing.l)
+                    .padding(top = spacing.xl, bottom = spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.height(spacing.xl))
@@ -107,11 +107,12 @@ private fun OnboardingContent(
             Spacer(Modifier.height(spacing.l))
 
             PrimaryButton(
-                text = if (state.isLoading) {
-                    stringResource(R.string.onboarding_validating)
-                } else {
-                    stringResource(R.string.onboarding_validate)
-                },
+                text =
+                    if (state.isLoading) {
+                        stringResource(R.string.onboarding_validating)
+                    } else {
+                        stringResource(R.string.onboarding_validate)
+                    },
                 onClick = onValidate,
                 enabled = state.key.isNotBlank(),
                 loading = state.isLoading,
@@ -148,10 +149,11 @@ private fun OnboardingPreviewLight() {
 private fun OnboardingPreviewLightError() {
     PreviewSurface(darkTheme = false) {
         OnboardingContent(
-            state = OnboardingUiState(
-                key = "key_xxx",
-                errorMessage = "That key was rejected. Double-check it and try again.",
-            ),
+            state =
+                OnboardingUiState(
+                    key = "key_xxx",
+                    errorMessage = "That key was rejected. Double-check it and try again.",
+                ),
             onKeyChange = {},
             onValidate = {},
             onGetKey = {},

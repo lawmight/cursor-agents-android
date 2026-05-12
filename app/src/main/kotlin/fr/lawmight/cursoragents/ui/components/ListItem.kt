@@ -38,11 +38,12 @@ fun ListItem(
     val spacing = LocalSpacing.current
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-                .defaultMinSize(minHeight = 56.dp)
-                .padding(horizontal = spacing.m, vertical = spacing.s),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .let { if (onClick != null) it.clickable(onClick = onClick) else it }
+                    .defaultMinSize(minHeight = 56.dp)
+                    .padding(horizontal = spacing.m, vertical = spacing.s),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (leading != null) {

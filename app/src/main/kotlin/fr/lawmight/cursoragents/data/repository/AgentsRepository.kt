@@ -20,21 +20,35 @@ class AgentsRepository(
         runCatching { _agents.value = c.listAgents().agents }
     }
 
-    suspend fun launch(req: LaunchAgentRequest, alias: String? = null): Agent? =
-        clientProvider(alias)?.launchAgent(req)
+    suspend fun launch(
+        req: LaunchAgentRequest,
+        alias: String? = null,
+    ): Agent? = clientProvider(alias)?.launchAgent(req)
 
-    suspend fun conversation(id: String, alias: String? = null): AgentConversation? =
-        clientProvider(alias)?.getConversation(id)
+    suspend fun conversation(
+        id: String,
+        alias: String? = null,
+    ): AgentConversation? = clientProvider(alias)?.getConversation(id)
 
-    suspend fun followUp(id: String, text: String, alias: String? = null) {
+    suspend fun followUp(
+        id: String,
+        text: String,
+        alias: String? = null,
+    ) {
         clientProvider(alias)?.followUp(id, FollowUpRequest(prompt = fr.lawmight.cursoragents.data.api.Prompt(text)))
     }
 
-    suspend fun stop(id: String, alias: String? = null) {
+    suspend fun stop(
+        id: String,
+        alias: String? = null,
+    ) {
         clientProvider(alias)?.stopAgent(id)
     }
 
-    suspend fun delete(id: String, alias: String? = null) {
+    suspend fun delete(
+        id: String,
+        alias: String? = null,
+    ) {
         clientProvider(alias)?.deleteAgent(id)
     }
 }

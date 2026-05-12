@@ -33,17 +33,19 @@ fun ImageAttachPill(
 ) {
     val spacing = LocalSpacing.current
     Row(
-        modifier = modifier
-            .clip(MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(end = spacing.xs),
+        modifier =
+            modifier
+                .clip(MaterialTheme.shapes.small)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(end = spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.surface),
+            modifier =
+                Modifier
+                    .size(40.dp)
+                    .clip(MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center,
         ) {
             if (imageUri != null) {
@@ -72,10 +74,11 @@ fun ImageAttachPill(
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Remove",
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
-                    .clickable(onClick = onRemove),
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .clickable(onClick = onRemove),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
