@@ -36,12 +36,13 @@ class OnboardingViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         keyStore = mockk(relaxed = true)
-        messages = mockk {
-            every { unauthorized() } returns UNAUTHORIZED_MESSAGE
-            every { forbidden() } returns FORBIDDEN_MESSAGE
-            every { cursorUnavailable() } returns CURSOR_UNAVAILABLE_MESSAGE
-            every { network() } returns NETWORK_MESSAGE
-        }
+        messages =
+            mockk {
+                every { unauthorized() } returns UNAUTHORIZED_MESSAGE
+                every { forbidden() } returns FORBIDDEN_MESSAGE
+                every { cursorUnavailable() } returns CURSOR_UNAVAILABLE_MESSAGE
+                every { network() } returns NETWORK_MESSAGE
+            }
     }
 
     @After
@@ -172,13 +173,14 @@ class OnboardingViewModelTest {
         )
 
     private fun viewModelWith(engine: MockEngine): OnboardingViewModel {
-        val factory = CursorApiClientFactory { key ->
-            CursorApiClient(
-                apiKey = key,
-                baseUrl = BASE_URL,
-                engine = engine,
-            )
-        }
+        val factory =
+            CursorApiClientFactory { key ->
+                CursorApiClient(
+                    apiKey = key,
+                    baseUrl = BASE_URL,
+                    engine = engine,
+                )
+            }
         return OnboardingViewModel(
             keyStore = keyStore,
             clientFactory = factory,

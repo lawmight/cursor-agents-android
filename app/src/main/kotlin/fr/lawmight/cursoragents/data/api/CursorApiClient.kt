@@ -54,7 +54,9 @@ class CursorApiClient private constructor(
 
     suspend fun getAgent(id: String): Agent = client.get("$baseUrl/v0/agents/$id").body()
 
-    suspend fun getConversation(id: String): AgentConversation = client.get("$baseUrl/v0/agents/$id/conversation").body()
+    suspend fun getConversation(id: String): AgentConversation {
+        return client.get("$baseUrl/v0/agents/$id/conversation").body()
+    }
 
     suspend fun launchAgent(req: LaunchAgentRequest): Agent = client.post("$baseUrl/v0/agents") { setBody(req) }.body()
 
