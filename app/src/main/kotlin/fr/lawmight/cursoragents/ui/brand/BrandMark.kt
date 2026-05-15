@@ -30,6 +30,7 @@ import fr.lawmight.cursoragents.ui.theme.LocalSpacing
  * tile. Use [BrandMark] for hero placements (onboarding) and [BrandWordmark]
  * for app-bar headers.
  */
+@Suppress("FunctionName", "FunctionNaming")
 @Composable
 fun BrandMark(
     modifier: Modifier = Modifier,
