@@ -26,104 +26,104 @@ class OnboardingViewModel
         private val messages: OnboardingErrorMessages,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     ) : ViewModel() {
-    private val _state = MutableStateFlow<OnboardingState>(OnboardingState.Idle())
-    val state: StateFlow<OnboardingState> = _state.asStateFlow()
+        private val _state = MutableStateFlow<OnboardingState>(OnboardingState.Idle())
+        val state: StateFlow<OnboardingState> = _state.asStateFlow()
 
-    private var validationJob: Job? = null
+        private var validationJob: Job? = null
 
-    init {
-        validateSavedKey()
-    }
-
-    fun event(event: OnboardingEvent) {
-        when (event) {
-            is OnboardingEvent.OnKeyChanged -> onKeyChanged(event.keyDraft)
-            is OnboardingEvent.OnValidate -> validateUserKey(event.key)
-            OnboardingEvent.OnUseDifferentKey -> useDifferentKey()
+        init {
+            validateSavedKey()
         }
-    }
 
-    private fun validateSavedKey() {
-        val savedKey = keyStore.read() ?: return
-        validationJob?.cancel()
-        validationJob =
-            viewModelScope.launch(ioDispatcher) {
-                _state.value = OnboardingState.Validating(savedKey)
-                when (val result = validateKey(savedKey)) {
-                    is ValidationResult.Success -> _state.value = OnboardingState.Validated(result.me)
-                    is ValidationResult.Failure -> _state.value = OnboardingState.Idle(savedKey)
-                }
+        fun event(event: OnboardingEvent) {
+            when (event) {
+                is OnboardingEvent.OnKeyChanged -> onKeyChanged(event.keyDraft)
+                is OnboardingEvent.OnValidate -> validateUserKey(event.key)
+                OnboardingEvent.OnUseDifferentKey -> useDifferentKey()
             }
-    }
-
-    private fun onKeyChanged(keyDraft: String) {
-        val current = _state.value
-        if (current is OnboardingState.Validating || current is OnboardingState.Validated) {
-            return
         }
-        _state.value = OnboardingState.Idle(keyDraft)
-    }
 
-    private fun validateUserKey(key: String) {
-        val trimmedKey = key.trim()
-        if (trimmedKey.isBlank()) return
-
-        validationJob?.cancel()
-        validationJob =
-            viewModelScope.launch(ioDispatcher) {
-                _state.value = OnboardingState.Validating(trimmedKey)
-                when (val result = validateKey(trimmedKey)) {
-                    is ValidationResult.Success -> {
-                        keyStore.save(trimmedKey)
-                        _state.value = OnboardingState.Validated(result.me)
-                    }
-                    is ValidationResult.Failure -> {
-                        _state.value =
-                            OnboardingState.ValidationFailed(
-                                keyDraft = trimmedKey,
-                                message = result.message,
-                            )
+        private fun validateSavedKey() {
+            val savedKey = keyStore.read() ?: return
+            validationJob?.cancel()
+            validationJob =
+                viewModelScope.launch(ioDispatcher) {
+                    _state.value = OnboardingState.Validating(savedKey)
+                    when (val result = validateKey(savedKey)) {
+                        is ValidationResult.Success -> _state.value = OnboardingState.Validated(result.me)
+                        is ValidationResult.Failure -> _state.value = OnboardingState.Idle(savedKey)
                     }
                 }
+        }
+
+        private fun onKeyChanged(keyDraft: String) {
+            val current = _state.value
+            if (current is OnboardingState.Validating || current is OnboardingState.Validated) {
+                return
             }
-    }
-
-    private fun useDifferentKey() {
-        validationJob?.cancel()
-        keyStore.remove(keyStore.activeAlias() ?: EncryptedKeyStore.DEFAULT_ALIAS)
-        _state.value = OnboardingState.Idle()
-    }
-
-    @Suppress("SwallowedException")
-    private suspend fun validateKey(key: String): ValidationResult {
-        val client = clientFactory.create(key.trim())
-        return try {
-            ValidationResult.Success(client.me())
-        } catch (exception: CursorApiException) {
-            ValidationResult.Failure(exception.toMessage())
-        } catch (exception: IOException) {
-            ValidationResult.Failure(messages.network())
-        } finally {
-            client.close()
-        }
-    }
-
-    private fun CursorApiException.toMessage(): String =
-        when (this) {
-            CursorApiException.Unauthorized -> messages.unauthorized()
-            CursorApiException.Forbidden -> messages.forbidden()
-            CursorApiException.NotFound,
-            CursorApiException.RateLimited,
-            is CursorApiException.Unexpected,
-            -> messages.cursorUnavailable()
+            _state.value = OnboardingState.Idle(keyDraft)
         }
 
-    private sealed interface ValidationResult {
-        data class Success(val me: MeResponse) : ValidationResult
+        private fun validateUserKey(key: String) {
+            val trimmedKey = key.trim()
+            if (trimmedKey.isBlank()) return
 
-        data class Failure(val message: String) : ValidationResult
+            validationJob?.cancel()
+            validationJob =
+                viewModelScope.launch(ioDispatcher) {
+                    _state.value = OnboardingState.Validating(trimmedKey)
+                    when (val result = validateKey(trimmedKey)) {
+                        is ValidationResult.Success -> {
+                            keyStore.save(trimmedKey)
+                            _state.value = OnboardingState.Validated(result.me)
+                        }
+                        is ValidationResult.Failure -> {
+                            _state.value =
+                                OnboardingState.ValidationFailed(
+                                    keyDraft = trimmedKey,
+                                    message = result.message,
+                                )
+                        }
+                    }
+                }
+        }
+
+        private fun useDifferentKey() {
+            validationJob?.cancel()
+            keyStore.remove(keyStore.activeAlias() ?: EncryptedKeyStore.DEFAULT_ALIAS)
+            _state.value = OnboardingState.Idle()
+        }
+
+        @Suppress("SwallowedException")
+        private suspend fun validateKey(key: String): ValidationResult {
+            val client = clientFactory.create(key.trim())
+            return try {
+                ValidationResult.Success(client.me())
+            } catch (exception: CursorApiException) {
+                ValidationResult.Failure(exception.toMessage())
+            } catch (exception: IOException) {
+                ValidationResult.Failure(messages.network())
+            } finally {
+                client.close()
+            }
+        }
+
+        private fun CursorApiException.toMessage(): String =
+            when (this) {
+                CursorApiException.Unauthorized -> messages.unauthorized()
+                CursorApiException.Forbidden -> messages.forbidden()
+                CursorApiException.NotFound,
+                CursorApiException.RateLimited,
+                is CursorApiException.Unexpected,
+                -> messages.cursorUnavailable()
+            }
+
+        private sealed interface ValidationResult {
+            data class Success(val me: MeResponse) : ValidationResult
+
+            data class Failure(val message: String) : ValidationResult
+        }
     }
-}
 
 sealed interface OnboardingEvent {
     data class OnKeyChanged(val keyDraft: String) : OnboardingEvent
