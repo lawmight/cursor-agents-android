@@ -54,8 +54,7 @@ class CursorApiClient private constructor(
 
     suspend fun getAgent(id: String): Agent = client.get("$baseUrl/v0/agents/$id").body()
 
-    suspend fun getConversation(id: String): AgentConversation =
-        client.get("$baseUrl/v0/agents/$id/conversation").body()
+    suspend fun getConversation(id: String): AgentConversation = client.get("$baseUrl/v0/agents/$id/conversation").body()
 
     suspend fun launchAgent(req: LaunchAgentRequest): Agent = client.post("$baseUrl/v0/agents") { setBody(req) }.body()
 
@@ -109,8 +108,7 @@ class CursorApiClient private constructor(
 
 private const val HTTP_ERROR_MIN_CODE = 400
 
-private suspend fun HttpResponse.bodyAsTextOrEmpty(): String =
-    runCatching { bodyAsText() }.getOrDefault("")
+private suspend fun HttpResponse.bodyAsTextOrEmpty(): String = runCatching { bodyAsText() }.getOrDefault("")
 
 private suspend fun HttpResponse.toCursorApiException(): CursorApiException? =
     when (status) {

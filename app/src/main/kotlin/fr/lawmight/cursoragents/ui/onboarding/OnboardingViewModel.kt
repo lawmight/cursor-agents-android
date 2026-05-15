@@ -8,22 +8,24 @@ import fr.lawmight.cursoragents.data.api.MeResponse
 import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
 import fr.lawmight.cursoragents.di.CursorApiClientFactory
 import fr.lawmight.cursoragents.di.IoDispatcher
-import java.io.IOException
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+import javax.inject.Inject
 
 @HiltViewModel
-class OnboardingViewModel @Inject constructor(
-    private val keyStore: EncryptedKeyStore,
-    private val clientFactory: CursorApiClientFactory,
-    private val messages: OnboardingErrorMessages,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : ViewModel() {
+class OnboardingViewModel
+    @Inject
+    constructor(
+        private val keyStore: EncryptedKeyStore,
+        private val clientFactory: CursorApiClientFactory,
+        private val messages: OnboardingErrorMessages,
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    ) : ViewModel() {
     private val _state = MutableStateFlow<OnboardingState>(OnboardingState.Idle())
     val state: StateFlow<OnboardingState> = _state.asStateFlow()
 
@@ -44,13 +46,14 @@ class OnboardingViewModel @Inject constructor(
     private fun validateSavedKey() {
         val savedKey = keyStore.read() ?: return
         validationJob?.cancel()
-        validationJob = viewModelScope.launch(ioDispatcher) {
-            _state.value = OnboardingState.Validating(savedKey)
-            when (val result = validateKey(savedKey)) {
-                is ValidationResult.Success -> _state.value = OnboardingState.Validated(result.me)
-                is ValidationResult.Failure -> _state.value = OnboardingState.Idle(savedKey)
+        validationJob =
+            viewModelScope.launch(ioDispatcher) {
+                _state.value = OnboardingState.Validating(savedKey)
+                when (val result = validateKey(savedKey)) {
+                    is ValidationResult.Success -> _state.value = OnboardingState.Validated(result.me)
+                    is ValidationResult.Failure -> _state.value = OnboardingState.Idle(savedKey)
+                }
             }
-        }
     }
 
     private fun onKeyChanged(keyDraft: String) {
@@ -66,21 +69,23 @@ class OnboardingViewModel @Inject constructor(
         if (trimmedKey.isBlank()) return
 
         validationJob?.cancel()
-        validationJob = viewModelScope.launch(ioDispatcher) {
-            _state.value = OnboardingState.Validating(trimmedKey)
-            when (val result = validateKey(trimmedKey)) {
-                is ValidationResult.Success -> {
-                    keyStore.save(trimmedKey)
-                    _state.value = OnboardingState.Validated(result.me)
-                }
-                is ValidationResult.Failure -> {
-                    _state.value = OnboardingState.ValidationFailed(
-                        keyDraft = trimmedKey,
-                        message = result.message,
-                    )
+        validationJob =
+            viewModelScope.launch(ioDispatcher) {
+                _state.value = OnboardingState.Validating(trimmedKey)
+                when (val result = validateKey(trimmedKey)) {
+                    is ValidationResult.Success -> {
+                        keyStore.save(trimmedKey)
+                        _state.value = OnboardingState.Validated(result.me)
+                    }
+                    is ValidationResult.Failure -> {
+                        _state.value =
+                            OnboardingState.ValidationFailed(
+                                keyDraft = trimmedKey,
+                                message = result.message,
+                            )
+                    }
                 }
             }
-        }
     }
 
     private fun useDifferentKey() {

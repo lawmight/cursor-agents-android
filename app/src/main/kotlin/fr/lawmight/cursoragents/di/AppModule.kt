@@ -25,8 +25,7 @@ annotation class IoDispatcher
 object AppModule {
     @Provides
     @Singleton
-    fun provideCursorApiClientFactory(): CursorApiClientFactory =
-        CursorApiClientFactory { apiKey -> CursorApiClient(apiKey) }
+    fun provideCursorApiClientFactory(): CursorApiClientFactory = CursorApiClientFactory { apiKey -> CursorApiClient(apiKey) }
 
     @Provides
     @IoDispatcher
@@ -37,6 +36,5 @@ object AppModule {
     fun provideAgentsRepository(
         keyStore: EncryptedKeyStore,
         clientFactory: CursorApiClientFactory,
-    ): AgentsRepository =
-        AgentsRepository { alias -> keyStore.read(alias)?.let(clientFactory::create) }
+    ): AgentsRepository = AgentsRepository { alias -> keyStore.read(alias)?.let(clientFactory::create) }
 }
