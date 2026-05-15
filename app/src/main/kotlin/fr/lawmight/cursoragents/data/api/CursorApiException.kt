@@ -6,5 +6,5 @@ sealed class CursorApiException(message: String) : RuntimeException(message) {
     object NotFound : CursorApiException("Not found.")
     object RateLimited : CursorApiException("Rate limit hit. Try again in a bit.")
     data class Unexpected(val code: Int, val rawBody: String) :
-        CursorApiException("Cursor API returned HTTP \$code: \$rawBody")
+        CursorApiException("Cursor API returned HTTP $code: $rawBody")
 }

@@ -1,0 +1,16 @@
+naming:
+  FunctionNaming:
+    ignoreAnnotated:
+      - Composable
+  MatchingDeclarationName:
+    active: false
+
+style:
+  ForbiddenComment:
+    active: false
+  MagicNumber:
+    ignorePropertyDeclaration: true
+  MaxLineLength:
+    active: false
+  UnusedParameter:
+    active: false

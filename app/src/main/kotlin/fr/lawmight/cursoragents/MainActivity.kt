@@ -4,20 +4,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
 import fr.lawmight.cursoragents.ui.nav.AppNavHost
 import fr.lawmight.cursoragents.ui.theme.CursorAgentsTheme
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject lateinit var keyStore: EncryptedKeyStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CursorAgentsTheme {
                 val nav = rememberNavController()
-                AppNavHost(navController = nav)
+                val hasSavedKey = remember { keyStore.read() != null }
+                AppNavHost(navController = nav, hasSavedKey = hasSavedKey)
             }
         }
     }
