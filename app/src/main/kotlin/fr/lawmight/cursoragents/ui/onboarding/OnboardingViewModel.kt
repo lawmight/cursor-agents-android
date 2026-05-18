@@ -3,8 +3,8 @@ package fr.lawmight.cursoragents.ui.onboarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import fr.lawmight.cursoragents.data.api.CursorApiException
-import fr.lawmight.cursoragents.data.api.MeResponse
+import fr.lawmight.cursoragents.api.CursorApiError
+import fr.lawmight.cursoragents.api.models.Me
 import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
 import fr.lawmight.cursoragents.di.CursorApiClientFactory
 import fr.lawmight.cursoragents.di.IoDispatcher
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -94,32 +93,35 @@ class OnboardingViewModel
             _state.value = OnboardingState.Idle()
         }
 
-        @Suppress("SwallowedException")
         private suspend fun validateKey(key: String): ValidationResult {
             val client = clientFactory.create(key.trim())
             return try {
-                ValidationResult.Success(client.me())
-            } catch (exception: CursorApiException) {
-                ValidationResult.Failure(exception.toMessage())
-            } catch (exception: IOException) {
-                ValidationResult.Failure(messages.network())
+                client
+                    .getMe()
+                    .fold(
+                        onSuccess = { ValidationResult.Success(it) },
+                        onFailure = { ValidationResult.Failure(it.toMessage()) },
+                    )
             } finally {
                 client.close()
             }
         }
 
-        private fun CursorApiException.toMessage(): String =
+        private fun Throwable.toMessage(): String =
             when (this) {
-                CursorApiException.Unauthorized -> messages.unauthorized()
-                CursorApiException.Forbidden -> messages.forbidden()
-                CursorApiException.NotFound,
-                CursorApiException.RateLimited,
-                is CursorApiException.Unexpected,
+                CursorApiError.Unauthorized -> messages.unauthorized()
+                CursorApiError.Forbidden -> messages.forbidden()
+                CursorApiError.NotFound,
+                is CursorApiError.RateLimited,
+                is CursorApiError.ServerError,
+                is CursorApiError.DecodeError,
                 -> messages.cursorUnavailable()
+                is CursorApiError.NetworkError -> messages.network()
+                else -> messages.network()
             }
 
         private sealed interface ValidationResult {
-            data class Success(val me: MeResponse) : ValidationResult
+            data class Success(val me: Me) : ValidationResult
 
             data class Failure(val message: String) : ValidationResult
         }

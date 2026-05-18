@@ -1,6 +1,6 @@
 package fr.lawmight.cursoragents.ui.onboarding
 
-import fr.lawmight.cursoragents.data.api.MeResponse
+import fr.lawmight.cursoragents.api.models.Me
 
 sealed interface OnboardingState {
     data class Idle(val keyDraft: String = "") : OnboardingState
@@ -12,5 +12,5 @@ sealed interface OnboardingState {
         val message: String,
     ) : OnboardingState
 
-    data class Validated(val me: MeResponse) : OnboardingState
+    data class Validated(val me: Me) : OnboardingState
 }

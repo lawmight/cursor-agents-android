@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import fr.lawmight.cursoragents.R
-import fr.lawmight.cursoragents.data.api.MeResponse
+import fr.lawmight.cursoragents.api.models.Me
 import fr.lawmight.cursoragents.ui.brand.BrandMark
 import fr.lawmight.cursoragents.ui.components.PreviewSurface
 import fr.lawmight.cursoragents.ui.components.PrimaryButton
@@ -160,7 +160,7 @@ private fun KeyEntryContent(
 
 @Composable
 private fun ValidatedContent(
-    me: MeResponse,
+    me: Me,
     onContinue: () -> Unit,
     onUseDifferentKey: () -> Unit,
 ) {
@@ -290,7 +290,7 @@ private fun OnboardingPreviewDarkConnected() {
     PreviewSurface(darkTheme = true) {
         ValidatedContent(
             me =
-                MeResponse(
+                Me(
                     apiKeyName = "Personal key",
                     createdAt = "2026-05-11T00:00:00Z",
                     userEmail = "user@example.com",
