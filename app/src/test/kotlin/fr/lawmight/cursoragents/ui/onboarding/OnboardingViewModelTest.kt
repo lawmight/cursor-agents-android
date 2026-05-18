@@ -3,7 +3,7 @@ package fr.lawmight.cursoragents.ui.onboarding
 import app.cash.turbine.test
 import fr.lawmight.cursoragents.data.api.CursorApiClient
 import fr.lawmight.cursoragents.data.api.MeResponse
-import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
+import fr.lawmight.cursoragents.data.security.EncryptedKeyStore
 import fr.lawmight.cursoragents.di.CursorApiClientFactory
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -53,7 +53,7 @@ class OnboardingViewModelTest {
     @Test
     fun `successful validation stores trimmed key and emits validated state`() =
         runTest {
-            every { keyStore.read() } returns null
+            every { keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) } returns null
             val viewModel = viewModelWith(status = HttpStatusCode.OK)
 
             viewModel.state.test {
@@ -64,7 +64,7 @@ class OnboardingViewModelTest {
 
                 assertEquals(OnboardingState.Validating("cursor-key"), awaitItem())
                 assertEquals(OnboardingState.Validated(ME_RESPONSE), awaitItem())
-                verify { keyStore.save("cursor-key") }
+                verify { keyStore.saveKey(EncryptedKeyStore.DEFAULT_LABEL, "cursor-key") }
             }
         }
 
@@ -98,7 +98,7 @@ class OnboardingViewModelTest {
     @Test
     fun `network validation failure uses connection message`() =
         runTest {
-            every { keyStore.read() } returns null
+            every { keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) } returns null
             val viewModel = viewModelWith(MockEngine { throw IOException("offline") })
 
             viewModel.state.test {
@@ -121,7 +121,7 @@ class OnboardingViewModelTest {
     @Test
     fun `saved key is validated on start and prefills draft while loading`() =
         runTest {
-            every { keyStore.read() } returns "saved-key"
+            every { keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) } returns "saved-key"
             val viewModel = viewModelWith(status = HttpStatusCode.OK)
 
             viewModel.state.test {
@@ -137,7 +137,7 @@ class OnboardingViewModelTest {
         status: HttpStatusCode,
         expectedMessage: String,
     ) {
-        every { keyStore.read() } returns null
+        every { keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) } returns null
         val viewModel = viewModelWith(status = status, body = """{"error":"nope"}""")
 
         viewModel.state.test {
@@ -155,7 +155,7 @@ class OnboardingViewModelTest {
                 awaitItem(),
             )
         }
-        verify(exactly = 0) { keyStore.save(any()) }
+        verify(exactly = 0) { keyStore.saveKey(any(), any()) }
     }
 
     private fun viewModelWith(

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.lawmight.cursoragents.data.api.CursorApiException
 import fr.lawmight.cursoragents.data.api.MeResponse
-import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
+import fr.lawmight.cursoragents.data.security.EncryptedKeyStore
 import fr.lawmight.cursoragents.di.CursorApiClientFactory
 import fr.lawmight.cursoragents.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -44,7 +44,7 @@ class OnboardingViewModel
         }
 
         private fun validateSavedKey() {
-            val savedKey = keyStore.read() ?: return
+        val savedKey = keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) ?: return
             validationJob?.cancel()
             validationJob =
                 viewModelScope.launch(ioDispatcher) {
@@ -74,7 +74,7 @@ class OnboardingViewModel
                     _state.value = OnboardingState.Validating(trimmedKey)
                     when (val result = validateKey(trimmedKey)) {
                         is ValidationResult.Success -> {
-                            keyStore.save(trimmedKey)
+                            keyStore.saveKey(EncryptedKeyStore.DEFAULT_LABEL, trimmedKey)
                             _state.value = OnboardingState.Validated(result.me)
                         }
                         is ValidationResult.Failure -> {
@@ -90,7 +90,7 @@ class OnboardingViewModel
 
         private fun useDifferentKey() {
             validationJob?.cancel()
-            keyStore.remove(keyStore.activeAlias() ?: EncryptedKeyStore.DEFAULT_ALIAS)
+        keyStore.deleteKey(EncryptedKeyStore.DEFAULT_LABEL)
             _state.value = OnboardingState.Idle()
         }
 

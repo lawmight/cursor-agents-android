@@ -22,6 +22,7 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables { useSupportLibrary = true }
+    buildConfigField("String", "CURSOR_DEFAULT_KEY_LABEL", "\"default\"")
   }
 
   buildTypes {
@@ -41,7 +42,11 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
   kotlinOptions { jvmTarget = "17" }
-  buildFeatures { compose = true }
+  buildFeatures {
+    buildConfig = true
+    compose = true
+  }
+  testOptions { unitTests { isIncludeAndroidResources = true } }
   packaging {
     resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
   }
@@ -86,6 +91,7 @@ dependencies {
   testImplementation(libs.mockk)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.ktor.client.mock)
+  testImplementation(libs.robolectric)
 }
 
 ktlint {

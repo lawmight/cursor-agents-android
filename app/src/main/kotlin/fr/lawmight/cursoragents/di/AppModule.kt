@@ -4,9 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import fr.lawmight.cursoragents.data.AgentsRepository
 import fr.lawmight.cursoragents.data.api.CursorApiClient
-import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
-import fr.lawmight.cursoragents.data.repository.AgentsRepository
+import fr.lawmight.cursoragents.data.security.EncryptedKeyStore
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
@@ -39,6 +39,7 @@ object AppModule {
         keyStore: EncryptedKeyStore,
         clientFactory: CursorApiClientFactory,
     ): AgentsRepository {
-        return AgentsRepository { alias -> keyStore.read(alias)?.let(clientFactory::create) }
+        val apiKey = keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL).orEmpty()
+        return AgentsRepository(clientFactory.create(apiKey))
     }
 }

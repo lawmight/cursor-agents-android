@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
+import fr.lawmight.cursoragents.data.security.EncryptedKeyStore
 import fr.lawmight.cursoragents.ui.nav.AppNavHost
 import fr.lawmight.cursoragents.ui.theme.CursorAgentsTheme
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CursorAgentsTheme {
                 val nav = rememberNavController()
-                val hasSavedKey = remember { keyStore.read() != null }
+                val hasSavedKey = remember { keyStore.hasAnyKey() }
                 AppNavHost(navController = nav, hasSavedKey = hasSavedKey)
             }
         }
