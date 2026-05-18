@@ -71,6 +71,12 @@
     <string name="detail_no_messages_body">The agent hasn\'t sent any output. Send a follow-up to nudge it along.</string>
     <string name="detail_summary">Summary</string>
     <string name="detail_repo">Repository</string>
+    <string name="detail_branch">Branch</string>
+    <string name="detail_conversation">Conversation</string>
+    <string name="detail_code">Code</string>
+    <string name="detail_agent_working">Agent is working…</string>
+    <string name="detail_followup_cancelled">Follow-up unavailable for cancelled agents.</string>
+    <string name="detail_followup_failed">Follow-up unavailable for failed agents.</string>
     <string name="detail_placeholder">Agent %1$s</string>
 
     <!-- Settings -->

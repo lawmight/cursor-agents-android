@@ -1,24 +1,17 @@
 package fr.lawmight.cursoragents.ui.nav
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavType
 import androidx.navigation.NavHostController
+import androidx.navigation.navArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import fr.lawmight.cursoragents.R
 import fr.lawmight.cursoragents.ui.onboarding.OnboardingScreen
+import fr.lawmight.cursoragents.ui.screens.agentdetail.AgentDetailScreen
 import fr.lawmight.cursoragents.ui.screens.agentlist.AgentListScreen
 import fr.lawmight.cursoragents.ui.screens.launch.LaunchAgentScreen
 import fr.lawmight.cursoragents.ui.settings.SettingsScreen
-import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
 object Routes {
     const val Onboarding = "onboarding"
@@ -31,7 +24,7 @@ object Routes {
     const val DETAIL = "agents/{id}"
     const val SETTINGS = "settings"
 
-    fun detail(id: String) = "agents/$id"
+    fun detail(id: String) = "agents/${Uri.encode(id)}"
 }
 
 @Composable
@@ -66,30 +59,12 @@ fun AppNavHost(
                 },
             )
         }
-        composable(Routes.DETAIL) { backStack ->
-            val id = backStack.arguments?.getString("id") ?: return@composable
-            PlaceholderScreen(text = stringResource(R.string.detail_placeholder, id))
+        composable(
+            route = Routes.DETAIL,
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
+        ) {
+            AgentDetailScreen(onBack = { navController.popBackStack() })
         }
         composable(Routes.SETTINGS) { SettingsScreen(onBack = { navController.popBackStack() }) }
-    }
-}
-
-@Composable
-private fun PlaceholderScreen(text: String) {
-    val spacing = LocalSpacing.current
-    Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(spacing.l),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
     }
 }
