@@ -33,6 +33,8 @@
     <string name="agents_error_body">Check your connection and try again.</string>
     <string name="agents_retry">Retry</string>
     <string name="agents_new">New agent</string>
+    <string name="agents_create_first">Create your first agent</string>
+    <string name="agents_create_placeholder">Agent creation is coming in CUR-17.</string>
     <string name="agents_pull_to_refresh">Pull to refresh</string>
 
     <!-- Launch -->
@@ -67,6 +69,7 @@
     <string name="detail_no_messages_body">The agent hasn\'t sent any output. Send a follow-up to nudge it along.</string>
     <string name="detail_summary">Summary</string>
     <string name="detail_repo">Repository</string>
+    <string name="detail_placeholder">Agent %1$s</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
