@@ -200,7 +200,9 @@ class AgentDetailViewModel
                 )
         }
 
-        private fun List<ConversationTurn>.withOptimisticFallback(optimisticTurn: ConversationTurn): List<ConversationTurn> =
+        private fun List<ConversationTurn>.withOptimisticFallback(
+            optimisticTurn: ConversationTurn,
+        ): List<ConversationTurn> =
             if (any { it.role == optimisticTurn.role && it.body == optimisticTurn.body }) {
                 this
             } else {

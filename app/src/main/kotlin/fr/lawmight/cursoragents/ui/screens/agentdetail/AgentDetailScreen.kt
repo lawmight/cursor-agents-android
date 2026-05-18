@@ -556,7 +556,9 @@ private fun fixtureContent(status: AgentStatus = AgentStatus.FINISHED) =
                 ConversationTurn(
                     id = "m2",
                     role = ConversationRole.Assistant,
-                    body = "I'll inspect the navigation and repository APIs.\n\n```kotlin\nfun route(id: String) = \"agents/$id\"\n```",
+                    body =
+                        "I'll inspect the navigation and repository APIs.\n\n" +
+                            "```kotlin\nfun route(id: String) = \"agents/{id}\"\n```",
                     createdAt = Instant.parse("2026-05-18T00:01:00Z"),
                     relativeTimestamp = "1m ago",
                 ),

@@ -138,7 +138,7 @@ class AgentDetailViewModelTest {
                 viewModel.sendFollowup(FOLLOWUP_TEXT)
                 testDispatcher.scheduler.advanceUntilIdle()
 
-                val errorState = awaitContent()
+                val errorState = awaitContent { it.sendError != null }
                 assertFalse(errorState.sending)
                 assertEquals(FOLLOWUP_TEXT, errorState.followupText)
                 assertEquals("offline", errorState.sendError)
@@ -146,10 +146,12 @@ class AgentDetailViewModelTest {
             }
         }
 
-    private suspend fun ReceiveTurbine<AgentDetailUiState>.awaitContent(): AgentDetailUiState.Content {
+    private suspend fun ReceiveTurbine<AgentDetailUiState>.awaitContent(
+        predicate: (AgentDetailUiState.Content) -> Boolean = { true },
+    ): AgentDetailUiState.Content {
         while (true) {
             val item = awaitItem()
-            if (item is AgentDetailUiState.Content) return item
+            if (item is AgentDetailUiState.Content && predicate(item)) return item
         }
     }
 
