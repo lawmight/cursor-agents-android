@@ -1,16 +1,19 @@
 package fr.lawmight.cursoragents.ui.onboarding
 
 import app.cash.turbine.test
-import fr.lawmight.cursoragents.data.api.CursorApiClient
-import fr.lawmight.cursoragents.data.api.MeResponse
+import fr.lawmight.cursoragents.api.CursorApiClient
+import fr.lawmight.cursoragents.api.models.Me
 import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
 import fr.lawmight.cursoragents.di.CursorApiClientFactory
+import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -20,15 +23,22 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalSerializationApi::class)
 class OnboardingViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
+    private val json =
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
     private lateinit var keyStore: EncryptedKeyStore
     private lateinit var messages: OnboardingErrorMessages
 
@@ -176,9 +186,13 @@ class OnboardingViewModelTest {
         val factory =
             CursorApiClientFactory { key ->
                 CursorApiClient(
-                    apiKey = key,
-                    baseUrl = BASE_URL,
-                    engine = engine,
+                    token = key,
+                    httpClient =
+                        HttpClient(engine) {
+                            install(ContentNegotiation) {
+                                json(json)
+                            }
+                        },
                 )
             }
         return OnboardingViewModel(
@@ -190,7 +204,6 @@ class OnboardingViewModelTest {
     }
 
     private companion object {
-        private const val BASE_URL = "https://api.cursor.test"
         private const val UNAUTHORIZED_MESSAGE = "unauthorized"
         private const val FORBIDDEN_MESSAGE = "forbidden"
         private const val CURSOR_UNAVAILABLE_MESSAGE = "cursor unavailable"
@@ -199,7 +212,7 @@ class OnboardingViewModelTest {
             {"apiKeyName":"Personal key","createdAt":"2026-05-11T00:00:00Z","userEmail":"user@example.com"}
         """
         private val ME_RESPONSE =
-            MeResponse(
+            Me(
                 apiKeyName = "Personal key",
                 createdAt = "2026-05-11T00:00:00Z",
                 userEmail = "user@example.com",

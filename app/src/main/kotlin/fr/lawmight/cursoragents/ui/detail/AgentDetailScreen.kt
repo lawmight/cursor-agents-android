@@ -46,12 +46,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.lawmight.cursoragents.R
-import fr.lawmight.cursoragents.data.api.Agent
-import fr.lawmight.cursoragents.data.api.AgentConversation
-import fr.lawmight.cursoragents.data.api.AgentStatus
-import fr.lawmight.cursoragents.data.api.ConversationMessage
-import fr.lawmight.cursoragents.data.api.Source
-import fr.lawmight.cursoragents.data.api.Target
+import fr.lawmight.cursoragents.api.models.Agent
+import fr.lawmight.cursoragents.api.models.AgentStatus
+import fr.lawmight.cursoragents.api.models.ConversationMessage
+import fr.lawmight.cursoragents.api.models.Source
+import fr.lawmight.cursoragents.api.models.Target
 import fr.lawmight.cursoragents.ui.components.EmptyState
 import fr.lawmight.cursoragents.ui.components.ErrorState
 import fr.lawmight.cursoragents.ui.components.GhostIconButton
@@ -68,7 +67,7 @@ sealed interface AgentDetailUiState {
 
     data class Loaded(
         val agent: Agent,
-        val conversation: AgentConversation,
+        val conversation: List<ConversationMessage>,
         val isSendingFollowup: Boolean = false,
     ) : AgentDetailUiState
 
@@ -227,9 +226,9 @@ private fun LoadedContent(
 ) {
     val spacing = fr.lawmight.cursoragents.ui.theme.LocalSpacing.current
     val listState = rememberLazyListState()
-    LaunchedEffect(state.conversation.messages.size) {
-        if (state.conversation.messages.isNotEmpty()) {
-            listState.animateScrollToItem(state.conversation.messages.size + 2)
+    LaunchedEffect(state.conversation.size) {
+        if (state.conversation.isNotEmpty()) {
+            listState.animateScrollToItem(state.conversation.size + 2)
         }
     }
     LazyColumn(
@@ -273,7 +272,7 @@ private fun LoadedContent(
             }
         }
         item { Spacer(Modifier.height(spacing.m)) }
-        if (state.conversation.messages.isEmpty()) {
+        if (state.conversation.isEmpty()) {
             item {
                 EmptyState(
                     title = stringResource(R.string.detail_no_messages_title),
@@ -281,10 +280,10 @@ private fun LoadedContent(
                 )
             }
         } else {
-            items(items = state.conversation.messages, key = { it.id }) { message ->
+            items(items = state.conversation, key = { it.id }) { message ->
                 Box(modifier = Modifier.padding(horizontal = spacing.m)) {
                     MessageBubble(
-                        text = message.text,
+                        text = message.text.orEmpty(),
                         author = if (message.type == "user") MessageAuthor.User else MessageAuthor.Agent,
                     )
                 }
@@ -366,43 +365,41 @@ private fun fixtureLoaded(id: String) =
             Agent(
                 id = id,
                 status = AgentStatus.RUNNING,
-                source = Source(
-                    repository = "https://github.com/lawmight/cursor-agents-android",
-                    ref = "main",
-                ),
-                target = Target(
-                    branchName = "cursor/$id",
-                    prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42",
-                ),
+                source =
+                    Source(
+                        repository = "https://github.com/lawmight/cursor-agents-android",
+                        ref = "main",
+                    ),
+                target =
+                    Target(
+                        branchName = "cursor/$id",
+                        prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42",
+                    ),
                 summary = "Refactor navigation host",
                 createdAt = "2026-05-12T08:00:00Z",
             ),
         conversation =
-            AgentConversation(
-                id = id,
-                messages =
-                    listOf(
-                        ConversationMessage(
-                            id = "m1",
-                            type = "user",
-                            text = "Refactor the navigation host to use type-safe routes.",
-                        ),
-                        ConversationMessage(
-                            id = "m2",
-                            type = "agent",
-                            text = "I'll start by inspecting AppNavHost.kt and listing the current routes.",
-                        ),
-                        ConversationMessage(
-                            id = "m3",
-                            type = "user",
-                            text = "Sounds good — also drop the legacy `agent/{id}` pattern.",
-                        ),
-                        ConversationMessage(
-                            id = "m4",
-                            type = "agent",
-                            text = "Got it. I'll wire the new sealed Routes type and migrate the call sites.",
-                        ),
-                    ),
+            listOf(
+                ConversationMessage(
+                    id = "m1",
+                    type = "user",
+                    text = "Refactor the navigation host to use type-safe routes.",
+                ),
+                ConversationMessage(
+                    id = "m2",
+                    type = "agent",
+                    text = "I'll start by inspecting AppNavHost.kt and listing the current routes.",
+                ),
+                ConversationMessage(
+                    id = "m3",
+                    type = "user",
+                    text = "Sounds good — also drop the legacy `agent/{id}` pattern.",
+                ),
+                ConversationMessage(
+                    id = "m4",
+                    type = "agent",
+                    text = "Got it. I'll wire the new sealed Routes type and migrate the call sites.",
+                ),
             ),
     )
 
@@ -428,7 +425,7 @@ private fun AgentDetailPreviewLightEmpty() {
     PreviewSurface(darkTheme = false) {
         val base = fixtureLoaded("a1")
         AgentDetailContent(
-            state = base.copy(conversation = base.conversation.copy(messages = emptyList())),
+            state = base.copy(conversation = emptyList()),
             followup = "",
             onFollowupChange = {}, onSendFollowup = {},
             onClose = {}, onRetry = {}, onStop = {}, onDelete = {}, onOpenPr = {},

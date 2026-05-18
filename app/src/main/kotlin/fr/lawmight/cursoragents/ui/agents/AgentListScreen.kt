@@ -26,10 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.lawmight.cursoragents.R
-import fr.lawmight.cursoragents.data.api.Agent
-import fr.lawmight.cursoragents.data.api.AgentStatus
-import fr.lawmight.cursoragents.data.api.Source
-import fr.lawmight.cursoragents.data.api.Target
+import fr.lawmight.cursoragents.api.models.Agent
+import fr.lawmight.cursoragents.api.models.AgentStatus
+import fr.lawmight.cursoragents.api.models.Source
+import fr.lawmight.cursoragents.api.models.Target
 import fr.lawmight.cursoragents.ui.brand.BrandWordmark
 import fr.lawmight.cursoragents.ui.components.AgentCard
 import fr.lawmight.cursoragents.ui.components.AgentCardShimmer
@@ -45,7 +45,8 @@ sealed interface AgentListUiState {
     data class Empty(val isRefreshing: Boolean = false) : AgentListUiState
 
     data class Loaded(
-        val agents: List<Pair<Agent, String>>, // agent + cached "age" string
+        // Agent plus cached "age" string.
+        val agents: List<Pair<Agent, String>>,
         val isRefreshing: Boolean = false,
     ) : AgentListUiState
 
@@ -146,7 +147,8 @@ private fun AgentListContent(
                                 start = spacing.m,
                                 end = spacing.m,
                                 top = spacing.s,
-                                bottom = 96.dp, // make room for the FAB
+                                // Make room for the FAB.
+                                bottom = 96.dp,
                             ),
                         verticalArrangement = Arrangement.spacedBy(spacing.s),
                     ) {

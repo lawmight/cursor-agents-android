@@ -22,6 +22,7 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables { useSupportLibrary = true }
+    buildConfigField("String", "CURSOR_API_BASE", "\"https://api.cursor.com/v0\"")
   }
 
   buildTypes {
@@ -41,7 +42,10 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
   kotlinOptions { jvmTarget = "17" }
-  buildFeatures { compose = true }
+  buildFeatures {
+    compose = true
+    buildConfig = true
+  }
   packaging {
     resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" }
   }
@@ -73,7 +77,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.json)
 
   implementation(libs.ktor.client.core)
-  implementation(libs.ktor.client.cio)
+  implementation(libs.ktor.client.android)
   implementation(libs.ktor.client.content.negotiation)
   implementation(libs.ktor.serialization.kotlinx.json)
   implementation(libs.ktor.client.logging)

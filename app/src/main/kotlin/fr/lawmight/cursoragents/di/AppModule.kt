@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import fr.lawmight.cursoragents.data.api.CursorApiClient
+import fr.lawmight.cursoragents.api.CursorApiClient
 import fr.lawmight.cursoragents.data.auth.EncryptedKeyStore
 import fr.lawmight.cursoragents.data.repository.AgentsRepository
 import kotlinx.coroutines.CoroutineDispatcher

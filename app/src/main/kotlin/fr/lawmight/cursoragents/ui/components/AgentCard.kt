@@ -25,10 +25,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.lawmight.cursoragents.data.api.Agent
-import fr.lawmight.cursoragents.data.api.AgentStatus
-import fr.lawmight.cursoragents.data.api.Source
-import fr.lawmight.cursoragents.data.api.Target
+import fr.lawmight.cursoragents.api.models.Agent
+import fr.lawmight.cursoragents.api.models.AgentStatus
+import fr.lawmight.cursoragents.api.models.Source
+import fr.lawmight.cursoragents.api.models.Target
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
 @Composable

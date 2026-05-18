@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.lawmight.cursoragents.data.api.AgentStatus
+import fr.lawmight.cursoragents.api.models.AgentStatus
 import fr.lawmight.cursoragents.ui.theme.LocalStatusColors
 import fr.lawmight.cursoragents.ui.theme.StatusColors
 
