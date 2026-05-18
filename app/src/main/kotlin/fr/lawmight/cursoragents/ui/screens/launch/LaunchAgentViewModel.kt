@@ -73,11 +73,12 @@ class LaunchAgentViewModel
 
             viewModelScope.launch {
                 _formState.update { it.copy(launchResult = LaunchResult.Submitting) }
-                val result = runCatching {
-                    withContext(ioDispatcher) {
-                        createAgent(validated)
+                val result =
+                    runCatching {
+                        withContext(ioDispatcher) {
+                            createAgent(validated)
+                        }
                     }
-                }
                 result.fold(
                     onSuccess = { agent ->
                         withContext(ioDispatcher) {
@@ -133,8 +134,7 @@ class LaunchAgentViewModel
                 launchResult = LaunchResult.Editing,
             )
 
-        private fun LaunchAgentFormState.normalizedRepositoryUrl(): String =
-            requireNotNull(repo.normalizedGitHubUrl())
+        private fun LaunchAgentFormState.normalizedRepositoryUrl(): String = requireNotNull(repo.normalizedGitHubUrl())
 
         private fun String.validationError(): String? =
             when {
@@ -163,15 +163,15 @@ class LaunchAgentViewModel
 
         private fun String.userMessage(): String = ifBlank { "Could not launch the agent. Try again." }
 
-        private fun Throwable.userMessage(): String =
-            message?.userMessage() ?: "Could not launch the agent. Try again."
+        private fun Throwable.userMessage(): String = message?.userMessage() ?: "Could not launch the agent. Try again."
 
         private fun Throwable.isRetryable(): Boolean =
             when (this) {
                 CursorApiError.Unauthorized,
                 CursorApiError.Forbidden,
                 CursorApiError.NotFound,
-                is CursorApiError.DecodeError -> false
+                is CursorApiError.DecodeError,
+                -> false
                 else -> true
             }
 
