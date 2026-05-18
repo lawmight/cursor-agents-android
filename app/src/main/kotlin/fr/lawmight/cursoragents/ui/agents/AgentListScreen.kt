@@ -45,7 +45,8 @@ sealed interface AgentListUiState {
     data class Empty(val isRefreshing: Boolean = false) : AgentListUiState
 
     data class Loaded(
-        val agents: List<Pair<Agent, String>>, // agent + cached "age" string
+        // Agent plus cached "age" string.
+        val agents: List<Pair<Agent, String>>,
         val isRefreshing: Boolean = false,
     ) : AgentListUiState
 
@@ -146,7 +147,8 @@ private fun AgentListContent(
                                 start = spacing.m,
                                 end = spacing.m,
                                 top = spacing.s,
-                                bottom = 96.dp, // make room for the FAB
+                                // Make room for the FAB.
+                                bottom = 96.dp,
                             ),
                         verticalArrangement = Arrangement.spacedBy(spacing.s),
                     ) {

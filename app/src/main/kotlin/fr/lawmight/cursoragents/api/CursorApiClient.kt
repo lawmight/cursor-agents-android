@@ -30,11 +30,11 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.JsonConvertException
 import io.ktor.serialization.kotlinx.json.json
-import java.io.IOException
 import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import java.io.IOException
 
 class CursorApiClient(
     private val token: String,
@@ -130,9 +130,7 @@ class CursorApiClient(
         header(HttpHeaders.Authorization, "Bearer $token")
     }
 
-    private suspend inline fun <reified T> request(
-        crossinline call: suspend () -> HttpResponse,
-    ): Result<T> =
+    private suspend inline fun <reified T> request(crossinline call: suspend () -> HttpResponse): Result<T> =
         wrap {
             val response = call()
             response.toApiError()?.let { return@wrap Result.failure(it) }

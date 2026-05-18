@@ -365,14 +365,16 @@ private fun fixtureLoaded(id: String) =
             Agent(
                 id = id,
                 status = AgentStatus.RUNNING,
-                source = Source(
-                    repository = "https://github.com/lawmight/cursor-agents-android",
-                    ref = "main",
-                ),
-                target = Target(
-                    branchName = "cursor/$id",
-                    prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42",
-                ),
+                source =
+                    Source(
+                        repository = "https://github.com/lawmight/cursor-agents-android",
+                        ref = "main",
+                    ),
+                target =
+                    Target(
+                        branchName = "cursor/$id",
+                        prUrl = "https://github.com/lawmight/cursor-agents-android/pull/42",
+                    ),
                 summary = "Refactor navigation host",
                 createdAt = "2026-05-12T08:00:00Z",
             ),

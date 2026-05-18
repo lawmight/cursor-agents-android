@@ -149,10 +149,8 @@ class CursorApiClientTest {
                         status = HttpStatusCode.TooManyRequests,
                         headers =
                             headersOf(
-                                HttpHeaders.ContentType,
-                                "application/json",
-                                HttpHeaders.RetryAfter,
-                                "60",
+                                HttpHeaders.ContentType to listOf("application/json"),
+                                HttpHeaders.RetryAfter to listOf("60"),
                             ),
                     )
                 }
@@ -183,9 +181,7 @@ class CursorApiClientTest {
             assertTrue(error is CursorApiError.DecodeError)
         }
 
-    private fun testClient(
-        handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData,
-    ): CursorApiClient {
+    private fun testClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): CursorApiClient {
         val httpClient =
             HttpClient(MockEngine(handler)) {
                 install(ContentNegotiation) {
