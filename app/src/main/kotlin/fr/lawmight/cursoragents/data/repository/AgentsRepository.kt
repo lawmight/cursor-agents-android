@@ -1,10 +1,11 @@
 package fr.lawmight.cursoragents.data.repository
 
-import fr.lawmight.cursoragents.data.api.Agent
-import fr.lawmight.cursoragents.data.api.AgentConversation
-import fr.lawmight.cursoragents.data.api.CursorApiClient
-import fr.lawmight.cursoragents.data.api.FollowUpRequest
-import fr.lawmight.cursoragents.data.api.LaunchAgentRequest
+import fr.lawmight.cursoragents.api.CursorApiClient
+import fr.lawmight.cursoragents.api.models.Agent
+import fr.lawmight.cursoragents.api.models.ConversationMessage
+import fr.lawmight.cursoragents.api.models.FollowUpRequest
+import fr.lawmight.cursoragents.api.models.LaunchAgentRequest
+import fr.lawmight.cursoragents.api.models.Prompt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,38 +18,38 @@ class AgentsRepository(
 
     suspend fun refresh(alias: String? = null) {
         val c = clientProvider(alias) ?: return
-        runCatching { _agents.value = c.listAgents().agents }
+        c.listAgents().onSuccess { _agents.value = it.agents }
     }
 
     suspend fun launch(
         req: LaunchAgentRequest,
         alias: String? = null,
-    ): Agent? = clientProvider(alias)?.launchAgent(req)
+    ): Agent? = clientProvider(alias)?.launchAgent(req)?.getOrNull()
 
     suspend fun conversation(
         id: String,
         alias: String? = null,
-    ): AgentConversation? = clientProvider(alias)?.getConversation(id)
+    ): List<ConversationMessage>? = clientProvider(alias)?.getAgentConversation(id)?.getOrNull()
 
     suspend fun followUp(
         id: String,
         text: String,
         alias: String? = null,
     ) {
-        clientProvider(alias)?.followUp(id, FollowUpRequest(prompt = fr.lawmight.cursoragents.data.api.Prompt(text)))
+        clientProvider(alias)?.addFollowUp(id, FollowUpRequest(prompt = Prompt(text)))
     }
 
     suspend fun stop(
         id: String,
         alias: String? = null,
     ) {
-        clientProvider(alias)?.stopAgent(id)
+        clientProvider(alias)?.stopAgent(id)?.getOrNull()
     }
 
     suspend fun delete(
         id: String,
         alias: String? = null,
     ) {
-        clientProvider(alias)?.deleteAgent(id)
+        clientProvider(alias)?.deleteAgent(id)?.getOrNull()
     }
 }
