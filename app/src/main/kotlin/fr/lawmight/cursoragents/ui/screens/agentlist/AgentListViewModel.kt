@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class AgentListViewModel
@@ -44,22 +45,27 @@ class AgentListViewModel
                 viewModelScope.launch {
                     isRefreshing = initialRefreshComplete
                     emitStateFromCache()
-                    try {
+                    runCatching {
                         withContext(ioDispatcher) {
                             repository.refresh()
                         }
-                        initialRefreshComplete = true
-                        isRefreshing = false
-                        emitStateFromCache()
-                    } catch (throwable: Throwable) {
-                        initialRefreshComplete = true
-                        isRefreshing = false
-                        _uiState.value =
-                            AgentListUiState.Error(
-                                message = throwable.userMessage(),
-                                canRetry = true,
-                            )
-                    }
+                    }.fold(
+                        onSuccess = {
+                            initialRefreshComplete = true
+                            isRefreshing = false
+                            emitStateFromCache()
+                        },
+                        onFailure = { throwable ->
+                            if (throwable is CancellationException) throw throwable
+                            initialRefreshComplete = true
+                            isRefreshing = false
+                            _uiState.value =
+                                AgentListUiState.Error(
+                                    message = throwable.userMessage(),
+                                    canRetry = true,
+                                )
+                        },
+                    )
                 }
         }
 
