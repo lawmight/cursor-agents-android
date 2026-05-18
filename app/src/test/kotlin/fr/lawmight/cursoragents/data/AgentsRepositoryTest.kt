@@ -8,7 +8,6 @@ import fr.lawmight.cursoragents.data.api.LaunchAgentRequest
 import fr.lawmight.cursoragents.data.api.Prompt
 import fr.lawmight.cursoragents.data.api.Source
 import fr.lawmight.cursoragents.data.api.Target
-import java.io.IOException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.currentTime
@@ -17,6 +16,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AgentsRepositoryTest {
@@ -190,11 +190,9 @@ private class FakeAgentsApi(
     private val listAgentHandler: (suspend () -> List<Agent>)? = null,
     private val launchAgentHandler: (suspend (LaunchAgentRequest) -> Agent)? = null,
 ) : AgentsApi {
-    override suspend fun listAgents(): List<Agent> =
-        listAgentHandler?.invoke() ?: listResponses.removeFirst()
+    override suspend fun listAgents(): List<Agent> = listAgentHandler?.invoke() ?: listResponses.removeFirst()
 
-    override suspend fun launchAgent(req: LaunchAgentRequest): Agent =
-        checkNotNull(launchAgentHandler).invoke(req)
+    override suspend fun launchAgent(req: LaunchAgentRequest): Agent = checkNotNull(launchAgentHandler).invoke(req)
 
     override suspend fun stopAgent(id: String) = Unit
 
