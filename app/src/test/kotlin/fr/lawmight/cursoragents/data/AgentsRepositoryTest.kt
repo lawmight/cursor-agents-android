@@ -140,7 +140,7 @@ class AgentsRepositoryTest {
             runCurrent()
 
             job.cancel()
-            advanceTimeBy(POLLING_INTERVAL_MS * 3)
+            advanceTimeBy(CANCELLED_POLLING_ADVANCE_MS)
             runCurrent()
 
             assertEquals(1, attempts)
@@ -210,6 +210,7 @@ class AgentsRepositoryTest {
         const val SECOND_BACKOFF_MS = 10_000L
         const val MAX_BACKOFF_MS = 30_000L
         const val TOTAL_BACKOFF_MS = FIRST_BACKOFF_MS + SECOND_BACKOFF_MS + MAX_BACKOFF_MS
+        const val CANCELLED_POLLING_ADVANCE_MS = POLLING_INTERVAL_MS * 3
         const val SUCCESSFUL_ATTEMPT = 4
 
         val json =
