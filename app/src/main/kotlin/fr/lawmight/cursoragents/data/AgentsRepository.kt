@@ -17,14 +17,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class AgentsRepository(
-    private val client: CursorApiClient,
+class AgentsRepository private constructor(
+    private val api: AgentsApi,
 ) {
+    constructor(client: CursorApiClient) : this(CursorAgentsApi(client))
+
+    internal constructor(
+        api: AgentsApi,
+        @Suppress("UNUSED_PARAMETER") marker: Unit,
+    ) : this(api)
+
     private val _agents = MutableStateFlow<List<Agent>>(emptyList())
     val agents: StateFlow<List<Agent>> = _agents.asStateFlow()
 
     suspend fun refresh() {
-        _agents.value = client.listAgents().agents
+        _agents.value = api.listAgents()
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
@@ -49,23 +56,22 @@ class AgentsRepository(
         }
 
     @Suppress("RedundantSuspendModifier")
-    suspend fun observeAgent(id: String): Flow<Agent> =
-        agents.mapNotNull { agents -> agents.firstOrNull { it.id == id } }
+    suspend fun observeAgent(id: String): Flow<Agent> = agents.mapNotNull { agents -> agents.firstOrNull { it.id == id } }
 
     suspend fun launch(req: LaunchAgentRequest): Result<Agent> =
         runCatching {
-            val agent = client.launchAgent(req)
+            val agent = api.launchAgent(req)
             _agents.update { current -> listOf(agent) + current.filterNot { it.id == agent.id } }
             agent
         }
 
     suspend fun stop(id: String) {
-        client.stopAgent(id)
+        api.stopAgent(id)
         refresh()
     }
 
     suspend fun delete(id: String) {
-        client.deleteAgent(id)
+        api.deleteAgent(id)
         refresh()
     }
 
@@ -73,7 +79,7 @@ class AgentsRepository(
         id: String,
         req: FollowUpRequest,
     ) {
-        client.followUp(id, req)
+        api.followUp(id, req)
         refresh()
     }
 
@@ -88,5 +94,43 @@ class AgentsRepository(
                 FIRST_ERROR_BACKOFF_MS -> SECOND_ERROR_BACKOFF_MS
                 else -> MAX_ERROR_BACKOFF_MS
             }
+    }
+}
+
+internal interface AgentsApi {
+    suspend fun listAgents(): List<Agent>
+
+    suspend fun launchAgent(req: LaunchAgentRequest): Agent
+
+    suspend fun stopAgent(id: String)
+
+    suspend fun deleteAgent(id: String)
+
+    suspend fun followUp(
+        id: String,
+        req: FollowUpRequest,
+    )
+}
+
+private class CursorAgentsApi(
+    private val client: CursorApiClient,
+) : AgentsApi {
+    override suspend fun listAgents(): List<Agent> = client.listAgents().agents
+
+    override suspend fun launchAgent(req: LaunchAgentRequest): Agent = client.launchAgent(req)
+
+    override suspend fun stopAgent(id: String) {
+        client.stopAgent(id)
+    }
+
+    override suspend fun deleteAgent(id: String) {
+        client.deleteAgent(id)
+    }
+
+    override suspend fun followUp(
+        id: String,
+        req: FollowUpRequest,
+    ) {
+        client.followUp(id, req)
     }
 }

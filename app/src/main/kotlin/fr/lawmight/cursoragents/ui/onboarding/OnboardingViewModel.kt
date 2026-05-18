@@ -44,7 +44,7 @@ class OnboardingViewModel
         }
 
         private fun validateSavedKey() {
-        val savedKey = keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) ?: return
+            val savedKey = keyStore.loadKey(EncryptedKeyStore.DEFAULT_LABEL) ?: return
             validationJob?.cancel()
             validationJob =
                 viewModelScope.launch(ioDispatcher) {
@@ -90,7 +90,7 @@ class OnboardingViewModel
 
         private fun useDifferentKey() {
             validationJob?.cancel()
-        keyStore.deleteKey(EncryptedKeyStore.DEFAULT_LABEL)
+            keyStore.deleteKey(EncryptedKeyStore.DEFAULT_LABEL)
             _state.value = OnboardingState.Idle()
         }
 

@@ -2,34 +2,21 @@ package fr.lawmight.cursoragents.data
 
 import app.cash.turbine.test
 import fr.lawmight.cursoragents.data.api.Agent
-import fr.lawmight.cursoragents.data.api.AgentListResponse
 import fr.lawmight.cursoragents.data.api.AgentStatus
-import fr.lawmight.cursoragents.data.api.CursorApiClient
+import fr.lawmight.cursoragents.data.api.FollowUpRequest
 import fr.lawmight.cursoragents.data.api.LaunchAgentRequest
 import fr.lawmight.cursoragents.data.api.Prompt
 import fr.lawmight.cursoragents.data.api.Source
 import fr.lawmight.cursoragents.data.api.Target
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.request.HttpResponseData
-import io.ktor.client.request.HttpRequestData
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import java.io.IOException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AgentsRepositoryTest {
@@ -37,12 +24,7 @@ class AgentsRepositoryTest {
     fun `refresh updates flow`() =
         runTest {
             val refreshedAgent = agent("agent-1")
-            val repository =
-                AgentsRepository(
-                    clientWith {
-                        respondJson(listResponse(refreshedAgent))
-                    },
-                )
+            val repository = AgentsRepository(FakeAgentsApi(listResponses = ArrayDeque(listOf(listOf(refreshedAgent)))), Unit)
 
             repository.agents.test {
                 assertEquals(emptyList<Agent>(), awaitItem())
@@ -59,12 +41,10 @@ class AgentsRepositoryTest {
         runTest {
             val firstAgent = agent("agent-1", AgentStatus.CREATING)
             val secondAgent = agent("agent-1", AgentStatus.RUNNING)
-            val responses = ArrayDeque(listOf(listResponse(firstAgent), listResponse(secondAgent)))
             val repository =
                 AgentsRepository(
-                    clientWith {
-                        respondJson(responses.removeFirst())
-                    },
+                    FakeAgentsApi(listResponses = ArrayDeque(listOf(listOf(firstAgent), listOf(secondAgent)))),
+                    Unit,
                 )
 
             val job = repository.startPolling(intervalMs = POLLING_INTERVAL_MS, scope = this)
@@ -87,14 +67,17 @@ class AgentsRepositoryTest {
             val attemptTimes = mutableListOf<Long>()
             val repository =
                 AgentsRepository(
-                    clientWith {
-                        attempts += 1
-                        attemptTimes += currentTime
-                        if (attempts < SUCCESSFUL_ATTEMPT) {
-                            throw IOException("offline")
-                        }
-                        respondJson(listResponse(successfulAgent))
-                    },
+                    FakeAgentsApi(
+                        listAgentHandler = {
+                            attempts += 1
+                            attemptTimes += currentTime
+                            if (attempts < SUCCESSFUL_ATTEMPT) {
+                                throw IOException("offline")
+                            }
+                            listOf(successfulAgent)
+                        },
+                    ),
+                    Unit,
                 )
 
             val job = repository.startPolling(intervalMs = POLLING_INTERVAL_MS, scope = this)
@@ -130,10 +113,13 @@ class AgentsRepositoryTest {
             var attempts = 0
             val repository =
                 AgentsRepository(
-                    clientWith {
-                        attempts += 1
-                        respondJson(listResponse(agent("agent-$attempts")))
-                    },
+                    FakeAgentsApi(
+                        listAgentHandler = {
+                            attempts += 1
+                            listOf(agent("agent-$attempts"))
+                        },
+                    ),
+                    Unit,
                 )
 
             val job = repository.startPolling(intervalMs = POLLING_INTERVAL_MS, scope = this)
@@ -153,11 +139,8 @@ class AgentsRepositoryTest {
             val launchedAgent = agent("agent-2")
             val repository =
                 AgentsRepository(
-                    clientWith { request ->
-                        assertEquals(HttpMethod.Post, request.method)
-                        assertEquals("/v0/agents", request.url.encodedPath)
-                        respondJson(json.encodeToString(launchedAgent))
-                    },
+                    FakeAgentsApi(launchAgentHandler = { launchedAgent }),
+                    Unit,
                 )
 
             val result = repository.launch(launchRequest())
@@ -166,22 +149,6 @@ class AgentsRepositoryTest {
             assertEquals(launchedAgent, result.getOrNull())
             assertEquals(listOf(launchedAgent), repository.agents.value)
         }
-
-    private fun clientWith(handler: MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): CursorApiClient =
-        CursorApiClient(
-            apiKey = "cursor-key",
-            baseUrl = BASE_URL,
-            engine = MockEngine(handler),
-        )
-
-    private fun MockRequestHandleScope.respondJson(content: String): HttpResponseData =
-        respond(
-            content = content,
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
-        )
-
-    private fun listResponse(vararg agents: Agent): String = json.encodeToString(AgentListResponse(agents.toList()))
 
     private fun agent(
         id: String,
@@ -204,7 +171,6 @@ class AgentsRepositoryTest {
         )
 
     private companion object {
-        const val BASE_URL = "https://api.cursor.test"
         const val POLLING_INTERVAL_MS = 1_000L
         const val FIRST_BACKOFF_MS = 5_000L
         const val SECOND_BACKOFF_MS = 10_000L
@@ -212,10 +178,26 @@ class AgentsRepositoryTest {
         const val TOTAL_BACKOFF_MS = FIRST_BACKOFF_MS + SECOND_BACKOFF_MS + MAX_BACKOFF_MS
         const val CANCELLED_POLLING_ADVANCE_MS = POLLING_INTERVAL_MS * 3
         const val SUCCESSFUL_ATTEMPT = 4
-
-        val json =
-            Json {
-                encodeDefaults = true
-            }
     }
+}
+
+private class FakeAgentsApi(
+    private val listResponses: ArrayDeque<List<Agent>> = ArrayDeque(),
+    private val listAgentHandler: (suspend () -> List<Agent>)? = null,
+    private val launchAgentHandler: (suspend (LaunchAgentRequest) -> Agent)? = null,
+) : AgentsApi {
+    override suspend fun listAgents(): List<Agent> =
+        listAgentHandler?.invoke() ?: listResponses.removeFirst()
+
+    override suspend fun launchAgent(req: LaunchAgentRequest): Agent =
+        checkNotNull(launchAgentHandler).invoke(req)
+
+    override suspend fun stopAgent(id: String) = Unit
+
+    override suspend fun deleteAgent(id: String) = Unit
+
+    override suspend fun followUp(
+        id: String,
+        req: FollowUpRequest,
+    ) = Unit
 }

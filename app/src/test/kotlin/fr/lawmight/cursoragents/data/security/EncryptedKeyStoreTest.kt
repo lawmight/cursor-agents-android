@@ -23,7 +23,7 @@ class EncryptedKeyStoreTest {
     fun setUp() {
         context = RuntimeEnvironment.getApplication()
         context.deleteSharedPreferences(PREFS_FILE)
-        keyStore = EncryptedKeyStore(context)
+        keyStore = EncryptedKeyStore(context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE), Unit)
     }
 
     @After
