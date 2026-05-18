@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.lawmight.cursoragents.api.models.AgentStatus
+import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 import fr.lawmight.cursoragents.ui.theme.LocalStatusColors
 import fr.lawmight.cursoragents.ui.theme.StatusColors
 
@@ -41,6 +42,7 @@ fun StatusBadge(
     size: StatusBadgeSize = StatusBadgeSize.Small,
 ) {
     val palette = LocalStatusColors.current
+    val spacing = LocalSpacing.current
     val (bg, fg) = palette.colorsFor(status)
     val showPulse = status == AgentStatus.RUNNING || status == AgentStatus.CREATING
     val metrics =
@@ -59,7 +61,7 @@ fun StatusBadge(
     ) {
         if (showPulse) {
             PulsingDot(color = fg, size = metrics.dot)
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(spacing.xs))
         }
         Text(
             text = status.label(),
@@ -83,7 +85,7 @@ private fun AgentStatus.label(): String =
         AgentStatus.CREATING -> "Creating"
         AgentStatus.RUNNING -> "Running"
         AgentStatus.FINISHED -> "Finished"
-        AgentStatus.STOPPED -> "Stopped"
+        AgentStatus.STOPPED -> "Cancelled"
         AgentStatus.FAILED -> "Failed"
     }
 

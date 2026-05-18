@@ -17,6 +17,8 @@ private val DarkColors =
         onPrimaryContainer = OnAccent,
         secondary = AccentMuted,
         onSecondary = OnAccent,
+        tertiary = StatusFinished,
+        onTertiary = StatusFinishedDarkOn,
         background = DarkBg,
         onBackground = DarkOnSurface,
         surface = DarkSurface,
@@ -40,6 +42,8 @@ private val LightColors =
         onPrimaryContainer = LightOnSurface,
         secondary = AccentPressed,
         onSecondary = OnAccent,
+        tertiary = StatusFinished,
+        onTertiary = StatusFinishedLightOn,
         background = LightBg,
         onBackground = LightOnBackground,
         surface = LightSurface,
@@ -68,35 +72,25 @@ data class StatusColors(
     val onFailed: Color,
 )
 
-internal val DarkStatusColors =
+private fun statusColorsFor(scheme: androidx.compose.material3.ColorScheme): StatusColors =
     StatusColors(
-        creating = StatusCreating,
-        onCreating = StatusCreatingDarkOn,
-        running = StatusRunning,
-        onRunning = StatusRunningDarkOn,
-        finished = StatusFinished,
-        onFinished = StatusFinishedDarkOn,
-        stopped = StatusStopped,
-        onStopped = StatusStoppedDarkOn,
-        failed = StatusFailed,
-        onFailed = StatusFailedDarkOn,
+        creating = scheme.secondary,
+        onCreating = scheme.onSecondary,
+        running = scheme.primary,
+        onRunning = scheme.onPrimary,
+        finished = scheme.tertiary,
+        onFinished = scheme.onTertiary,
+        stopped = scheme.surfaceVariant,
+        onStopped = scheme.onSurfaceVariant,
+        failed = scheme.error,
+        onFailed = scheme.onError,
     )
 
-internal val LightStatusColors =
-    StatusColors(
-        creating = StatusCreating,
-        onCreating = StatusCreatingLightOn,
-        running = StatusRunning,
-        onRunning = StatusRunningLightOn,
-        finished = StatusFinished,
-        onFinished = StatusFinishedLightOn,
-        stopped = StatusStopped,
-        onStopped = StatusStoppedLightOn,
-        failed = StatusFailed,
-        onFailed = StatusFailedLightOn,
-    )
+internal val DarkStatusColors = statusColorsFor(DarkColors)
 
-val LocalStatusColors = staticCompositionLocalOf { DarkStatusColors }
+internal val LightStatusColors = statusColorsFor(LightColors)
+
+val LocalStatusColors = staticCompositionLocalOf { LightStatusColors }
 
 @Composable
 fun CursorAgentsTheme(
