@@ -56,7 +56,9 @@ class AgentsRepository private constructor(
         }
 
     @Suppress("RedundantSuspendModifier")
-    suspend fun observeAgent(id: String): Flow<Agent> = agents.mapNotNull { agents -> agents.firstOrNull { it.id == id } }
+    suspend fun observeAgent(id: String): Flow<Agent> {
+        return agents.mapNotNull { agents -> agents.firstOrNull { it.id == id } }
+    }
 
     suspend fun launch(req: LaunchAgentRequest): Result<Agent> =
         runCatching {

@@ -24,7 +24,11 @@ class AgentsRepositoryTest {
     fun `refresh updates flow`() =
         runTest {
             val refreshedAgent = agent("agent-1")
-            val repository = AgentsRepository(FakeAgentsApi(listResponses = ArrayDeque(listOf(listOf(refreshedAgent)))), Unit)
+            val repository =
+                AgentsRepository(
+                    FakeAgentsApi(listResponses = ArrayDeque(listOf(listOf(refreshedAgent)))),
+                    Unit,
+                )
 
             repository.agents.test {
                 assertEquals(emptyList<Agent>(), awaitItem())
