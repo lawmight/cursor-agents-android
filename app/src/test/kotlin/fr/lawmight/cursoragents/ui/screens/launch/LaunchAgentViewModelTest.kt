@@ -155,7 +155,8 @@ class LaunchAgentViewModelTest {
     @Test
     fun `api error surfaces as error state`() =
         runTest {
-            coEvery { client.createAgent(any()) } returns Result.failure(CursorApiError.RateLimited(30))
+            coEvery { client.createAgent(any()) } returns
+                Result.failure(CursorApiError.RateLimited(RETRY_AFTER_SECONDS))
             val viewModel = viewModel()
 
             viewModel.formState.test {
@@ -194,4 +195,8 @@ class LaunchAgentViewModelTest {
             target = Target(branchName = "cursor/$id"),
             createdAt = "2026-05-18T00:00:00Z",
         )
+
+    private companion object {
+        const val RETRY_AFTER_SECONDS = 30
+    }
 }
