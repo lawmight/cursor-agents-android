@@ -14,9 +14,10 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -63,7 +64,7 @@ class OnboardingViewModelTest {
     @Test
     fun `successful validation stores trimmed key and emits validated state`() =
         runTest {
-            every { keyStore.read() } returns null
+            coEvery { keyStore.get() } returns null
             val viewModel = viewModelWith(status = HttpStatusCode.OK)
 
             viewModel.state.test {
@@ -74,7 +75,7 @@ class OnboardingViewModelTest {
 
                 assertEquals(OnboardingState.Validating("cursor-key"), awaitItem())
                 assertEquals(OnboardingState.Validated(ME_RESPONSE), awaitItem())
-                verify { keyStore.save("cursor-key") }
+                coVerify { keyStore.put("cursor-key") }
             }
         }
 
@@ -108,7 +109,7 @@ class OnboardingViewModelTest {
     @Test
     fun `network validation failure uses connection message`() =
         runTest {
-            every { keyStore.read() } returns null
+            coEvery { keyStore.get() } returns null
             val viewModel = viewModelWith(MockEngine { throw IOException("offline") })
 
             viewModel.state.test {
@@ -131,7 +132,7 @@ class OnboardingViewModelTest {
     @Test
     fun `saved key is validated on start and prefills draft while loading`() =
         runTest {
-            every { keyStore.read() } returns "saved-key"
+            coEvery { keyStore.get() } returns "saved-key"
             val viewModel = viewModelWith(status = HttpStatusCode.OK)
 
             viewModel.state.test {
@@ -147,7 +148,7 @@ class OnboardingViewModelTest {
         status: HttpStatusCode,
         expectedMessage: String,
     ) {
-        every { keyStore.read() } returns null
+        coEvery { keyStore.get() } returns null
         val viewModel = viewModelWith(status = status, body = """{"error":"nope"}""")
 
         viewModel.state.test {
@@ -165,7 +166,7 @@ class OnboardingViewModelTest {
                 awaitItem(),
             )
         }
-        verify(exactly = 0) { keyStore.save(any()) }
+        coVerify(exactly = 0) { keyStore.put(any()) }
     }
 
     private fun viewModelWith(
