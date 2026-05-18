@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
+@Suppress("FunctionName", "FunctionNaming")
 @Composable
 fun PrimaryButton(
     text: String,

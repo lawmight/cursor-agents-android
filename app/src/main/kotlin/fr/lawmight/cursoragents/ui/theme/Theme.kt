@@ -107,6 +107,7 @@ fun CursorAgentsTheme(
     val statusColors = if (darkTheme) DarkStatusColors else LightStatusColors
     CompositionLocalProvider(
         LocalSpacing provides Spacing(),
+        LocalMotion provides MotionTokens(),
         LocalStatusColors provides statusColors,
     ) {
         MaterialTheme(
