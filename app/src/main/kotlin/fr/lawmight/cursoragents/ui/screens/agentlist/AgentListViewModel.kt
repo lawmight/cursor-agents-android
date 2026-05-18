@@ -134,8 +134,7 @@ class AgentListViewModel
                 }
             }.getOrDefault("just now")
 
-        private fun Throwable.userMessage(): String =
-            message?.takeIf { it.isNotBlank() } ?: "Check your connection and try again."
+        private fun Throwable.userMessage(): String = message?.takeIf { it.isNotBlank() } ?: "Check your connection and try again."
 
         private companion object {
             const val AGENT_ID_PREFIX_LENGTH = 8
