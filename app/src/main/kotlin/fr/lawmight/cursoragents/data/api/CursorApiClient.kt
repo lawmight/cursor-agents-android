@@ -1,7 +1,10 @@
 package fr.lawmight.cursoragents.data.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -21,39 +24,22 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class CursorApiClient(
-    private val apiKey: String,
-    private val baseUrl: String = "https://api.cursor.com",
+@Suppress("TooManyFunctions")
+class CursorApiClient private constructor(
+    private val baseUrl: String,
+    private val client: HttpClient,
 ) {
-    private val json =
-        Json {
-            ignoreUnknownKeys = true
-            encodeDefaults = false
-        }
+    constructor(
+        apiKey: String,
+        baseUrl: String = "https://api.cursor.com",
+        engineFactory: HttpClientEngineFactory<*> = CIO,
+    ) : this(baseUrl, buildClient(apiKey, engineFactory))
 
-    private val client: HttpClient =
-        HttpClient(CIO) {
-            install(ContentNegotiation) { json(json) }
-            install(Logging)
-            defaultRequest {
-                header(HttpHeaders.Authorization, "Bearer $apiKey")
-                contentType(ContentType.Application.Json)
-            }
-            HttpResponseValidator {
-                validateResponse { response ->
-                    when (response.status) {
-                        HttpStatusCode.Unauthorized -> throw CursorApiException.Unauthorized
-                        HttpStatusCode.Forbidden -> throw CursorApiException.Forbidden
-                        HttpStatusCode.NotFound -> throw CursorApiException.NotFound
-                        HttpStatusCode.TooManyRequests -> throw CursorApiException.RateLimited
-                        else ->
-                            if (response.status.value >= 400) {
-                                throw CursorApiException.Unexpected(response.status.value, response.bodyAsTextOrEmpty())
-                            }
-                    }
-                }
-            }
-        }
+    internal constructor(
+        apiKey: String,
+        baseUrl: String,
+        engine: HttpClientEngine,
+    ) : this(baseUrl, buildClient(apiKey, engine))
 
     suspend fun me(): MeResponse = client.get("$baseUrl/v0/me").body()
 
@@ -68,8 +54,9 @@ class CursorApiClient(
 
     suspend fun getAgent(id: String): Agent = client.get("$baseUrl/v0/agents/$id").body()
 
-    suspend fun getConversation(id: String): AgentConversation =
-        client.get("$baseUrl/v0/agents/$id/conversation").body()
+    suspend fun getConversation(id: String): AgentConversation {
+        return client.get("$baseUrl/v0/agents/$id/conversation").body()
+    }
 
     suspend fun launchAgent(req: LaunchAgentRequest): Agent = client.post("$baseUrl/v0/agents") { setBody(req) }.body()
 
@@ -87,6 +74,54 @@ class CursorApiClient(
     suspend fun listRepositories(): RepositoriesResponse = client.get("$baseUrl/v0/repositories").body()
 
     fun close() = client.close()
+
+    private companion object {
+        private val json =
+            Json {
+                ignoreUnknownKeys = true
+                encodeDefaults = false
+            }
+
+        fun buildClient(
+            apiKey: String,
+            engineFactory: HttpClientEngineFactory<*>,
+        ): HttpClient = HttpClient(engineFactory) { configure(apiKey) }
+
+        fun buildClient(
+            apiKey: String,
+            engine: HttpClientEngine,
+        ): HttpClient = HttpClient(engine) { configure(apiKey) }
+
+        private fun HttpClientConfig<*>.configure(apiKey: String) {
+            install(ContentNegotiation) { json(json) }
+            install(Logging)
+            defaultRequest {
+                header(HttpHeaders.Authorization, "Bearer $apiKey")
+                contentType(ContentType.Application.Json)
+            }
+            HttpResponseValidator {
+                validateResponse { response ->
+                    response.toCursorApiException()?.let { throw it }
+                }
+            }
+        }
+    }
 }
 
+private const val HTTP_ERROR_MIN_CODE = 400
+
 private suspend fun HttpResponse.bodyAsTextOrEmpty(): String = runCatching { bodyAsText() }.getOrDefault("")
+
+private suspend fun HttpResponse.toCursorApiException(): CursorApiException? =
+    when (status) {
+        HttpStatusCode.Unauthorized -> CursorApiException.Unauthorized
+        HttpStatusCode.Forbidden -> CursorApiException.Forbidden
+        HttpStatusCode.NotFound -> CursorApiException.NotFound
+        HttpStatusCode.TooManyRequests -> CursorApiException.RateLimited
+        else ->
+            if (status.value >= HTTP_ERROR_MIN_CODE) {
+                CursorApiException.Unexpected(status.value, bodyAsTextOrEmpty())
+            } else {
+                null
+            }
+    }

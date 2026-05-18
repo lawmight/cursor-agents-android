@@ -11,8 +11,10 @@ import fr.lawmight.cursoragents.ui.onboarding.OnboardingScreen
 import fr.lawmight.cursoragents.ui.settings.SettingsScreen
 
 object Routes {
-    const val ONBOARDING = "onboarding"
-    const val AGENTS = "agents"
+    const val Onboarding = "onboarding"
+    const val AgentList = "agents"
+    const val ONBOARDING = Onboarding
+    const val AGENTS = AgentList
     const val LAUNCH = "launch"
     const val DETAIL = "agent/{id}"
     const val SETTINGS = "settings"
@@ -21,10 +23,23 @@ object Routes {
 }
 
 @Composable
-fun AppNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Routes.ONBOARDING) {
-        composable(Routes.ONBOARDING) { OnboardingScreen(onValidated = { navController.navigate(Routes.AGENTS) }) }
-        composable(Routes.AGENTS) {
+fun AppNavHost(
+    navController: NavHostController,
+    hasSavedKey: Boolean,
+) {
+    val startDestination = if (hasSavedKey) Routes.AgentList else Routes.Onboarding
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(Routes.Onboarding) {
+            OnboardingScreen(
+                onValidated = {
+                    navController.navigate(Routes.AgentList) {
+                        popUpTo(Routes.Onboarding) { inclusive = true }
+                    }
+                },
+            )
+        }
+        composable(Routes.AgentList) {
             AgentListScreen(
                 onLaunch = { navController.navigate(Routes.LAUNCH) },
                 onSettings = { navController.navigate(Routes.SETTINGS) },
