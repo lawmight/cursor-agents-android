@@ -16,16 +16,18 @@ import androidx.navigation.compose.composable
 import fr.lawmight.cursoragents.R
 import fr.lawmight.cursoragents.ui.onboarding.OnboardingScreen
 import fr.lawmight.cursoragents.ui.screens.agentlist.AgentListScreen
+import fr.lawmight.cursoragents.ui.screens.launch.LaunchAgentScreen
 import fr.lawmight.cursoragents.ui.settings.SettingsScreen
 import fr.lawmight.cursoragents.ui.theme.LocalSpacing
 
 object Routes {
     const val Onboarding = "onboarding"
     const val AgentList = "agents/list"
-    const val CreateAgent = "agents/create"
+    const val LaunchAgent = "agents/launch"
+    const val CreateAgent = LaunchAgent
     const val ONBOARDING = Onboarding
     const val AGENTS = AgentList
-    const val LAUNCH = CreateAgent
+    const val LAUNCH = LaunchAgent
     const val DETAIL = "agents/{id}"
     const val SETTINGS = "settings"
 
@@ -51,12 +53,19 @@ fun AppNavHost(
         }
         composable(Routes.AgentList) {
             AgentListScreen(
-                onCreateAgent = { navController.navigate(Routes.CreateAgent) },
+                onCreateAgent = { navController.navigate(Routes.LaunchAgent) },
                 onSettings = { navController.navigate(Routes.SETTINGS) },
                 onOpenAgent = { id -> navController.navigate(Routes.detail(id)) },
             )
         }
-        composable(Routes.CreateAgent) { PlaceholderScreen(text = stringResource(R.string.agents_create_placeholder)) }
+        composable(Routes.LaunchAgent) {
+            LaunchAgentScreen(
+                onBack = { navController.popBackStack() },
+                onLaunched = {
+                    navController.popBackStack(Routes.AgentList, inclusive = false)
+                },
+            )
+        }
         composable(Routes.DETAIL) { backStack ->
             val id = backStack.arguments?.getString("id") ?: return@composable
             PlaceholderScreen(text = stringResource(R.string.detail_placeholder, id))

@@ -54,7 +54,7 @@ class AgentsRepository(
 
     suspend fun launch(req: LaunchAgentRequest): Agent? =
         withClient { client ->
-            client.launchAgent(req).getOrThrow().also { agent ->
+            client.createAgent(req).getOrThrow().also { agent ->
                 _agents.value = listOf(agent) + _agents.value.filterNot { it.id == agent.id }
             }
         }

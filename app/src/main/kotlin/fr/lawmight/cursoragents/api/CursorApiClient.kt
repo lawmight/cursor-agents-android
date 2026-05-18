@@ -75,6 +75,8 @@ class CursorApiClient(
             }
         }
 
+    suspend fun createAgent(req: LaunchAgentRequest): Result<Agent> = launchAgent(req)
+
     suspend fun addFollowUp(
         id: String,
         req: FollowUpRequest,

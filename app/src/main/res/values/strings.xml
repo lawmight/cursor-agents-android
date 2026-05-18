@@ -40,11 +40,13 @@
     <!-- Launch -->
     <string name="launch_title">Launch agent</string>
     <string name="launch_repo">Repository</string>
+    <string name="launch_repo_hint">owner/repo or https://github.com/owner/repo</string>
     <string name="launch_repo_pick">Pick repository</string>
     <string name="launch_branch">Branch</string>
-    <string name="launch_branch_hint">main</string>
+    <string name="launch_branch_hint">Default branch</string>
     <string name="launch_prompt">Prompt</string>
     <string name="launch_prompt_hint">What should the agent do?</string>
+    <string name="launch_model">Model</string>
     <string name="launch_options">Options</string>
     <string name="launch_auto_create_pr">Auto-create pull request</string>
     <string name="launch_auto_create_pr_subtitle">Open a draft PR when the agent finishes.</string>
