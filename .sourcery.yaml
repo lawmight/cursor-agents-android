@@ -1,0 +1,4 @@
+ignore:
+  - "**/*"
+review:
+  request_changes: false
