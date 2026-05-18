@@ -163,8 +163,6 @@ class CursorApiClient(
             Result.failure(CursorApiError.DecodeError(cause))
         } catch (cause: IOException) {
             Result.failure(CursorApiError.NetworkError(cause))
-        } catch (cause: Throwable) {
-            Result.failure(CursorApiError.NetworkError(cause))
         }
 
     private fun HttpResponse.toApiError(): CursorApiError? =
