@@ -25,6 +25,9 @@ import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+private typealias MockHandler =
+    suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData
+
 @OptIn(ExperimentalSerializationApi::class)
 class CursorApiClientTest {
     private val json =
@@ -181,7 +184,7 @@ class CursorApiClientTest {
             assertTrue(error is CursorApiError.DecodeError)
         }
 
-    private fun testClient(handler: suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData): CursorApiClient {
+    private fun testClient(handler: MockHandler): CursorApiClient {
         val httpClient =
             HttpClient(MockEngine(handler)) {
                 install(ContentNegotiation) {
