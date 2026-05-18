@@ -52,6 +52,13 @@ class AgentsRepository(
         }
     }
 
+    suspend fun refreshAgent(id: String): Agent? =
+        withClient { client ->
+            client.getAgent(id).getOrThrow().also { agent ->
+                _agents.value = listOf(agent) + _agents.value.filterNot { it.id == agent.id }
+            }
+        }
+
     suspend fun launch(req: LaunchAgentRequest): Agent? =
         withClient { client ->
             client.createAgent(req).getOrThrow().also { agent ->
