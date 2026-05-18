@@ -5,15 +5,27 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import fr.lawmight.cursoragents.di.IoDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface EncryptedKeyStore {
+    suspend fun put(key: String)
+
+    suspend fun get(): String?
+
+    suspend fun clear()
+}
+
 @Singleton
-class EncryptedKeyStore
+class AndroidEncryptedKeyStore
     @Inject
     constructor(
         @ApplicationContext context: Context,
-    ) {
+        @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    ) : EncryptedKeyStore {
         private val masterKey: MasterKey =
             MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -28,40 +40,31 @@ class EncryptedKeyStore
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
             )
 
-        fun save(
-            key: String,
-            alias: String = DEFAULT_ALIAS,
-        ) {
-            prefs.edit().putString("key:$alias", key).apply()
-            prefs.edit().putString(ACTIVE_ALIAS_KEY, alias).apply()
+        override suspend fun put(key: String) {
+            withContext(ioDispatcher) {
+                prefs.edit().putString(API_KEY, key).commitOrThrow()
+            }
         }
 
-        fun read(alias: String? = null): String? {
-            val resolved =
-                alias
-                    ?: prefs.getString(ACTIVE_ALIAS_KEY, DEFAULT_ALIAS)
-                    ?: DEFAULT_ALIAS
-            return prefs.getString("key:$resolved", null)
+        override suspend fun get(): String? =
+            withContext(ioDispatcher) {
+                prefs.getString(API_KEY, null)
+            }
+
+        override suspend fun clear() {
+            withContext(ioDispatcher) {
+                prefs.edit().remove(API_KEY).commitOrThrow()
+            }
         }
 
-        fun aliases(): List<String> = prefs.all.keys.filter { it.startsWith("key:") }.map { it.removePrefix("key:") }
-
-        fun activeAlias(): String? = prefs.getString(ACTIVE_ALIAS_KEY, null)
-
-        fun setActive(alias: String) {
-            prefs.edit().putString(ACTIVE_ALIAS_KEY, alias).apply()
-        }
-
-        fun remove(alias: String) {
-            prefs.edit().remove("key:$alias").apply()
-            if (activeAlias() == alias) {
-                prefs.edit().remove(ACTIVE_ALIAS_KEY).apply()
+        private fun SharedPreferences.Editor.commitOrThrow() {
+            check(commit()) {
+                "Failed to persist encrypted API key"
             }
         }
 
         companion object {
             private const val FILE_NAME = "cursor_secure_prefs"
-            private const val ACTIVE_ALIAS_KEY = "active_alias"
-            const val DEFAULT_ALIAS = "default"
+            private const val API_KEY = "cursor_api_key"
         }
     }

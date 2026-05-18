@@ -43,10 +43,10 @@ class OnboardingViewModel
         }
 
         private fun validateSavedKey() {
-            val savedKey = keyStore.read() ?: return
             validationJob?.cancel()
             validationJob =
                 viewModelScope.launch(ioDispatcher) {
+                    val savedKey = keyStore.get() ?: return@launch
                     _state.value = OnboardingState.Validating(savedKey)
                     when (val result = validateKey(savedKey)) {
                         is ValidationResult.Success -> _state.value = OnboardingState.Validated(result.me)
@@ -73,7 +73,7 @@ class OnboardingViewModel
                     _state.value = OnboardingState.Validating(trimmedKey)
                     when (val result = validateKey(trimmedKey)) {
                         is ValidationResult.Success -> {
-                            keyStore.save(trimmedKey)
+                            keyStore.put(trimmedKey)
                             _state.value = OnboardingState.Validated(result.me)
                         }
                         is ValidationResult.Failure -> {
@@ -89,8 +89,10 @@ class OnboardingViewModel
 
         private fun useDifferentKey() {
             validationJob?.cancel()
-            keyStore.remove(keyStore.activeAlias() ?: EncryptedKeyStore.DEFAULT_ALIAS)
-            _state.value = OnboardingState.Idle()
+            viewModelScope.launch(ioDispatcher) {
+                keyStore.clear()
+                _state.value = OnboardingState.Idle()
+            }
         }
 
         private suspend fun validateKey(key: String): ValidationResult {

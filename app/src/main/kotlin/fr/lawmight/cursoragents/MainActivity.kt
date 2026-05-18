@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,8 +25,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             CursorAgentsTheme {
                 val nav = rememberNavController()
-                val hasSavedKey = remember { keyStore.read() != null }
-                AppNavHost(navController = nav, hasSavedKey = hasSavedKey)
+                val hasSavedKey by produceState<Boolean?>(initialValue = null) {
+                    value = keyStore.get() != null
+                }
+                hasSavedKey?.let { resolved ->
+                    AppNavHost(navController = nav, hasSavedKey = resolved)
+                }
             }
         }
     }
